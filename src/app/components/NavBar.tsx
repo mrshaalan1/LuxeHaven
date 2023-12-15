@@ -6,7 +6,7 @@ const Navbar = () => {
       <div className="navbar mx-auto max-w-screen-xxl py-10 bg-secendary px-4 lg:px-8 lg:py-7 shadow-lg">
         <div className="flex-1">
           <a className=" btn btn-ghost mr-4 cursor-pointer py-1.5 font-sans font-extrabold hover:text-sand text-4xl navbar-brand" href="/">
-            LuxHaven
+            LuxeHaven
           </a>
         </div>
         <ul className="menu menu-horizontal flex-auto">
