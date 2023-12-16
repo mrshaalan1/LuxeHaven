@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Navbar from "../components/NavBar";
+import Footer from "@/app/components/Footer";
 
 function Menu() {
   return (
@@ -15,7 +16,7 @@ function Menu() {
         </h1>
       </div>
 
-      <div className="grid lg:grid-cols-3  md:grid-cols-2 gap-1 ">
+      <div className="grid lg:grid-cols-3  md:grid-cols-2 gap-1">
         <div className="bg-sand rounded overflow-hidden shadow-md m-5 p-8 relative">
           <Image
             src={require("./images/menu/Omelet.png")}
@@ -274,7 +275,7 @@ function Menu() {
               Beef, Potato, Carrot
             </span>
           </div>
-                    <div>
+          <div>
             <Link
               className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-primary-dark hover:bg-sky rounded-full bg-primary absolute  bottom-4 right-4"
               href="/Menu/11"
@@ -455,6 +456,9 @@ function Menu() {
         </div>
       </div>
       <div className="pb-24"></div>
+      <div>
+        <Footer />
+      </div>
     </div>
   );
 }

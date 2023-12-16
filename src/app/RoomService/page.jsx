@@ -2,6 +2,8 @@ import React from "react";
 import Image from "next/image";
 import { Carousel } from "antd";
 import Navbar from "../components/NavBar";
+import Footer from "@/app/components/Footer";
+
 
 function RoomServices() {
   return (
@@ -205,6 +207,9 @@ function RoomServices() {
           <div className="bg-sky md:mb-96 pb-10"> </div>
         </li>
       </ul>
+      <div>
+      <Footer/>
+      </div>
     </div>
   );
 }
