@@ -6,7 +6,7 @@ import Navbar from "../components/NavBar";
 import { DatePicker, Space } from "antd";
 import Footer from "@/app/components/Footer";
 import Image from "next/image";
-import { Carousel } from "antd";
+import { Carousel, Rate, Button, message } from "antd";
 
 const onChange = (e) => {
   console.log(`checked = ${e.target.checked}`);
@@ -17,6 +17,14 @@ function Reserve() {
   const [roomType, setRoomType] = React.useState("");
   const onRoomTypeChange = (e) => {
     setRoomType(e.target.value);
+  };
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const success  = () => {
+    messageApi.open({
+      type: 'success',
+      content: 'Reservation Successful!',
+    });
   };
   return (
     <div className="Reserve bg-sky">
@@ -63,9 +71,16 @@ function Reserve() {
             Gym Service
           </Checkbox>
           <form>
-            <button className="bg-sand hover:bg-primary text-white font-bold text-xl py-2 px-4 rounded h-12 w-32 mt-10 mb-96 mr-8">
-              Reserve
-            </button>
+            <>
+              {contextHolder}
+              <Button
+                type="primary"
+                onClick={success}
+                className="bg-sand hover:bg-primary text-white font-bold text-xl py-2 px-4 rounded h-12 w-32 mt-10 mb-96 mr-8"
+              >
+                Reserve
+              </Button>
+            </>
           </form>
         </li>
         <li className="col-span-2 mt-10">
@@ -77,6 +92,7 @@ function Reserve() {
                   src={require("./room service/Room6.png")}
                   alt="slide 1"
                 />
+                <Rate disabled allowHalf defaultValue={3.5} className="pt-4" />
                 <p className=" p-5 font-sans text-lg">
                   Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                   Fuga, asperiores iure odit provident obcaecati pariatur eius
@@ -96,7 +112,9 @@ function Reserve() {
                   src={require("./room service/Room5.png")}
                   alt="slide 1"
                 />
-                                <p className=" p-5 font-sans text-lg">
+                <Rate disabled allowHalf defaultValue={3.5} className="pt-4" />
+
+                <p className=" p-5 font-sans text-lg">
                   Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                   Fuga, asperiores iure odit provident obcaecati pariatur eius
                   quasi sit minima ratione perspiciatis natus corrupti, harum
@@ -115,7 +133,9 @@ function Reserve() {
                   src={require("./room service/Room1.png")}
                   alt="slide 1"
                 />
-                                <p className=" p-5 font-sans text-lg">
+                <Rate disabled allowHalf defaultValue={3.5} className="pt-4" />
+
+                <p className=" p-5 font-sans text-lg">
                   Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                   Fuga, asperiores iure odit provident obcaecati pariatur eius
                   quasi sit minima ratione perspiciatis natus corrupti, harum
@@ -134,7 +154,7 @@ function Reserve() {
                   src={require("./room service/Room2.png")}
                   alt="slide 1"
                 />
-                                <p className=" p-5 font-sans text-lg">
+                <p className=" p-5 font-sans text-lg">
                   Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                   Fuga, asperiores iure odit provident obcaecati pariatur eius
                   quasi sit minima ratione perspiciatis natus corrupti, harum
@@ -153,7 +173,8 @@ function Reserve() {
                   src={require("./room service/Room3.png")}
                   alt="slide 1"
                 />
-                                <p className=" p-5 font-sans text-lg">
+                <Rate disabled allowHalf defaultValue={3.5} className="pt-4" />
+                <p className=" p-5 font-sans text-lg">
                   Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                   Fuga, asperiores iure odit provident obcaecati pariatur eius
                   quasi sit minima ratione perspiciatis natus corrupti, harum
@@ -172,7 +193,7 @@ function Reserve() {
                   src={require("./room service/Room4.png")}
                   alt="slide 1"
                 />
-                                <p className=" p-5 font-sans text-lg">
+                <p className=" p-5 font-sans text-lg">
                   Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                   Fuga, asperiores iure odit provident obcaecati pariatur eius
                   quasi sit minima ratione perspiciatis natus corrupti, harum

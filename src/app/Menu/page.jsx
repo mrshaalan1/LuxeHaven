@@ -15,6 +15,41 @@ function Menu() {
           Our Menu
         </h1>
       </div>
+      <div className="flex justify-center">
+        <div className="join">
+          <div>
+            <div>
+              <input
+                className="input input-bordered join-item bg-gray-200 text-black"
+                placeholder="Search"
+              />
+            </div>
+          </div>
+          <select className="select select-bordered join-item text-gray-700 hover:bg-gray-300 bg-gray-200">
+            <option disabled selected>
+              Filter
+            </option>
+            <option>BREAKFAST</option>
+            <option>LUNCH</option>
+            <option>DINNER</option>
+            <option>DRINK</option>
+          </select>
+          <select className="select select-bordered join-item text-gray-700 hover:bg-gray-300 bg-gray-200">
+            <option disabled selected>
+              Sort
+            </option>
+            <option>Price Descending</option>
+            <option>price Ascending</option>
+            <option>New</option>
+            <option>popularity</option>
+          </select>
+          <div className="indicator">
+            <button className="btn join-item bg-gray-200 hover:bg-gray-300">
+              Search
+            </button>
+          </div>
+        </div>
+      </div>
 
       <div className="grid lg:grid-cols-3  md:grid-cols-2 gap-1">
         <div className="bg-sand rounded overflow-hidden shadow-md m-5 p-8 relative">
