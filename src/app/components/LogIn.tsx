@@ -1,5 +1,11 @@
-import React, { useState } from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import Register from "./Register";
+import {useRouter} from "next/navigation";
+
+
 import {
   Button,
   Col,
@@ -10,10 +16,15 @@ import {
   Row,
   Checkbox,
   Space,
+  message,
 } from "antd";
+
+
 const onFinish = (values: any) => {
   console.log("Success:", values);
 };
+
+
 const validateMessages = {
   required: "${label} is required!",
   types: {
@@ -47,6 +58,40 @@ const LogIn: React.FC = () => {
     setIsRegistering(true);
   };
 
+  const [user, setUser] = React.useState({
+    Email: "",
+    Password: "",
+  });
+  const router = useRouter();
+
+  const onLogin = async () => {
+    axios.post("/api/users/login", user)
+      .then(response => {
+        console.log("Login success", response.data);
+        message.success("Logged In Successfully")
+        router.push("/myprofile");
+
+      })
+      .catch(error => {
+        if (error.response) {
+         console.log(error.response.status);
+       
+         let errorMessage = 'An unknown error occurred';
+       
+         if (error.response.data && error.response.data.error) {
+           errorMessage = error.response.data.error;
+         }
+       
+         message.error(`Login failed: ${errorMessage}`);
+        } else {
+         console.log('Error', error.message);
+        }
+       });
+       
+   };
+   
+   
+
   return (
     <>
       <Button
@@ -70,7 +115,6 @@ const LogIn: React.FC = () => {
         extra={
           <Space>
             <Button onClick={onClose}>Cancel</Button>
-            
           </Space>
         }
       >
@@ -93,7 +137,10 @@ const LogIn: React.FC = () => {
               label="Email"
               rules={[{ required: true, type: "email" }]}
             >
-              <Input />
+              <Input
+                value={user.Email}
+                onChange={(e) => setUser({ ...user, Email: e.target.value })}
+              />
             </Form.Item>
 
             <Form.Item<FieldType>
@@ -106,7 +153,10 @@ const LogIn: React.FC = () => {
                 },
               ]}
             >
-              <Input.Password />
+              <Input.Password
+                value={user.Password}
+                onChange={(e) => setUser({ ...user, Password: e.target.value })}
+              />
             </Form.Item>
 
             <Form.Item<FieldType>
@@ -118,7 +168,12 @@ const LogIn: React.FC = () => {
             </Form.Item>
 
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-              <Button type="primary" htmlType="submit" className="bg-primary">
+              <Button
+                onClick={onLogin}
+                type="primary"
+                htmlType="submit"
+                className="bg-primary"
+              >
                 Submit
               </Button>
             </Form.Item>

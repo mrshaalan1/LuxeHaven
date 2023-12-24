@@ -1,4 +1,9 @@
-import { Button, Form, Input, Select } from "antd";
+"use client";
+
+import { Button, Form, Input, Select, message } from "antd";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
 
 const { Option } = Select;
 
@@ -27,6 +32,8 @@ const tailFormItemLayout = {
 };
 
 const Register: React.FC = () => {
+  const router = useRouter();
+
   const [form] = Form.useForm();
 
   const onFinish = (values: any) => {
@@ -41,6 +48,40 @@ const Register: React.FC = () => {
       </Select>
     </Form.Item>
   );
+  const [user, setUser] = React.useState({
+    FirstName: "",
+    LastName: "",
+    Email: "",
+    Password: "",
+    Username: "",
+    PhoneNumber: "",
+  });
+  const [messageApi, contextHolder] = message.useMessage();
+  const ERROR = () => {
+    messageApi.open({
+      type: "error",
+      content: "Unknown Error occured",
+    });
+  };
+
+  const onSignup = async () => {
+    axios
+      .post("/api/users/register", user)
+      .then((response) => {
+        console.log("signup success", response.data);
+        message.success("Registered Successfully");
+        message.warning("Please Check Your Email For Confirmation");
+        router.push("/");
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response.data);
+          message.error(`Signup failed: ${error.response.data.error}`);
+        } else {
+          ERROR();
+        }
+      });
+  };
 
   return (
     <Form
@@ -57,7 +98,11 @@ const Register: React.FC = () => {
         label="First Name"
         rules={[{ required: true }]}
       >
-        <Input />
+        <Input
+          id="firstName"
+          value={user.FirstName}
+          onChange={(e) => setUser({ ...user, FirstName: e.target.value })}
+        />
       </Form.Item>
 
       <Form.Item
@@ -65,14 +110,22 @@ const Register: React.FC = () => {
         label="Last Name"
         rules={[{ required: true }]}
       >
-        <Input />
+        <Input
+          id="lastName"
+          value={user.LastName}
+          onChange={(e) => setUser({ ...user, LastName: e.target.value })}
+        />
       </Form.Item>
       <Form.Item
         label="Username"
         name="username"
         rules={[{ required: true, message: "Please input your username!" }]}
       >
-        <Input />
+        <Input
+          id="Username"
+          value={user.Username}
+          onChange={(e) => setUser({ ...user, Username: e.target.value })}
+        />
       </Form.Item>
       <Form.Item
         name="email"
@@ -88,7 +141,11 @@ const Register: React.FC = () => {
           },
         ]}
       >
-        <Input />
+        <Input
+          id="email"
+          value={user.Email}
+          onChange={(e) => setUser({ ...user, Email: e.target.value })}
+        />
       </Form.Item>
 
       <Form.Item
@@ -127,7 +184,11 @@ const Register: React.FC = () => {
           }),
         ]}
       >
-        <Input.Password />
+        <Input.Password
+          id="password"
+          value={user.Password}
+          onChange={(e) => setUser({ ...user, Password: e.target.value })}
+        />
       </Form.Item>
 
       <Form.Item
@@ -135,21 +196,21 @@ const Register: React.FC = () => {
         label="Phone Number"
         rules={[{ required: true, message: "Please input your phone number!" }]}
       >
-        <Input addonBefore={prefixSelector} style={{ width: "100%" }} />
-      </Form.Item>
-
-      <Form.Item
-        name="gender"
-        label="Gender"
-        rules={[{ required: true, message: "Please select gender!" }]}
-      >
-        <Select placeholder="select your gender">
-          <Option value="male">Male</Option>
-          <Option value="female">Female</Option>
-        </Select>
+        <Input
+          addonBefore={prefixSelector}
+          style={{ width: "100%" }}
+          id="phoneNumber"
+          value={user.PhoneNumber}
+          onChange={(e) => setUser({ ...user, PhoneNumber: e.target.value })}
+        />
       </Form.Item>
       <Form.Item {...tailFormItemLayout}>
-        <Button type="primary" htmlType="submit" className="bg-primary">
+        <Button
+          onClick={onSignup}
+          type="primary"
+          htmlType="submit"
+          className="bg-primary"
+        >
           Register
         </Button>
       </Form.Item>

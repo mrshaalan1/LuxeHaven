@@ -2,7 +2,8 @@
 
 import Navbar from "../components/NavBar";
 import Footer from "@/app/components/Footer";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { Checkbox, Button, Form, Input, Upload, message, Select } from "antd";
 
@@ -30,9 +31,26 @@ const beforeUpload = (file: RcFile) => {
 };
 
 export default function myprofile() {
+  interface UserData {
+    FirstName?: string;
+    LastName?: string;
+    PhoneNumber?: string;
+  }
+  useEffect(() => {
+    getUserDetails();
+  }, []);
+  // Initialize the state with the UserData interface
+  const [data, setData] = useState<UserData | null>(null);
+
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState<string>();
   const [componentDisabled, setComponentDisabled] = useState<boolean>(false);
+
+  const getUserDetails = async () => {
+    const res = await axios.get("/api/users/me");
+    console.log(res.data);
+    setData(res.data.data);
+  };
 
   const handleChange: UploadProps["onChange"] = (
     info: UploadChangeParam<UploadFile>
@@ -65,20 +83,13 @@ export default function myprofile() {
   return (
     <div className="bg-sky">
       <Navbar />
-      <div className="justify-center w-full text-xl">
-        <Checkbox
-          checked={componentDisabled}
-          onChange={(e) => setComponentDisabled(e.target.checked)}
-          className="p-5 text-xl"
-        >
-          Editing Mode
-        </Checkbox>
+
+      <div className="justify-center w-full text-xl pt-10">
         <>
           <Form
             labelCol={{ span: 4 }}
             wrapperCol={{ span: 14 }}
             layout="horizontal"
-            disabled={!componentDisabled}
             style={{ maxWidth: 800 }}
             className="px-4 text-xl"
           >
@@ -100,11 +111,23 @@ export default function myprofile() {
               </Upload>
             </Form.Item>
             <Form.Item name="First name" label="First Name">
-              <Input className="text-xl" />
+              <Input
+                className="text-xl"
+                value={data?.FirstName}
+                onChange={(event) =>
+                  setData({ ...data, FirstName: event.target.value })
+                }
+              />{" "}
             </Form.Item>
 
             <Form.Item name="Last name" label="Last Name">
-              <Input className="text-xl" />
+              <Input
+                className="text-xl"
+                value={data?.LastName}
+                onChange={(event) =>
+                  setData({ ...data, LastName: event.target.value })
+                }
+              />{" "}
             </Form.Item>
             <Form.Item
               name="Old password"
@@ -126,7 +149,7 @@ export default function myprofile() {
               rules={[
                 {
                   message: "Please input your new password!",
-                  min: 8
+                  min: 8,
                 },
               ]}
               hasFeedback
@@ -142,7 +165,7 @@ export default function myprofile() {
               rules={[
                 {
                   message: "Please confirm your password!",
-                  min: 8
+                  min: 8,
                 },
                 ({ getFieldValue }) => ({
                   validator(_, value) {
@@ -163,13 +186,17 @@ export default function myprofile() {
             <Form.Item
               name="phone"
               label="Phone Number"
-              rules={[{ message: "Please input your phone number!", }]}
+              rules={[{ message: "Please input your phone number!" }]}
             >
               <Input
                 className="text-xl"
                 addonBefore={prefixSelector}
                 style={{ width: "100%" }}
-              />
+                value={data?.PhoneNumber}
+                onChange={(event) =>
+                  setData({ ...data, PhoneNumber: event.target.value })
+                }
+              />{" "}
             </Form.Item>
             <Form.Item>
               <Button

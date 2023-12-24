@@ -1,10 +1,25 @@
 "use client";
-
+import axios from "axios";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import LogIn from "./LogIn";
 import Image from "next/image";
+import { message } from 'antd';
+
 
 const Navbar = () => {
+  const router = useRouter();
+  const logout = async () => {
+    try {
+      await axios.get("/api/users/logout");
+      message.success("Logged Out Successfully")
+      router.push("/");
+
+
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  };
   return (
     <div className="bg-sky">
       <div className="navbar mx-auto max-w-screen-xxl py-10 bg-secendary px-4 lg:px-8 lg:py-7 shadow-lg">
@@ -38,7 +53,7 @@ const Navbar = () => {
               className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-sand px-16 sm:px-auto text-2xl"
               href="/Car"
             >
-              Car
+              Car Rental
             </a>
           </li>
           <li>
@@ -52,13 +67,13 @@ const Navbar = () => {
           <li>
             <a
               className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-sand px-16 sm:px-auto text-2xl"
-              href="/Admin"
+              href="/admin"
             >
               Admin
             </a>
           </li>
           <li>
-          <LogIn/>
+            <LogIn />
           </li>
         </ul>
         <div className="flex-none gap-2">
@@ -72,7 +87,7 @@ const Navbar = () => {
                 <Image
                   alt="Tailwind CSS Navbar component"
                   src={require("../myprofile/image/default.png")}
-                  />
+                />
               </div>
             </div>
             <ul
@@ -80,13 +95,19 @@ const Navbar = () => {
               className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-primary-dark rounded-box w-52"
             >
               <li>
-                <a className="justify-between text-xl" href="/myprofile">Profile</a>
+                <a className="justify-between text-xl" href="/myprofile">
+                  Profile
+                </a>
               </li>
               <li>
-                <a className="justify-between text-xl" href="/myreservations">My Reservation</a>
+                <a className="justify-between text-xl" href="/myreservations">
+                  My Reservation
+                </a>
               </li>
               <li>
-                <a className="justify-between text-xl">Logout</a>
+                <a onClick={logout} className="justify-between text-xl">
+                  Logout
+                </a>
               </li>
             </ul>
           </div>
