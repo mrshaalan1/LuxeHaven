@@ -1,0 +1,48 @@
+import { ICar } from "./types";
+export const cars: ICar[] = [
+  {
+    CarName: "M3",
+    CarDescription: "Fastest Car in he word!!!!",
+    CarPicUrl: "/assets/car.jpg",
+    CarBrand: "BMW",
+    CarPrice: 12,
+    CarRentalFrom: "1245",
+    CarRentalTo: "1223",
+  },
+  {
+    CarName: "whatsapp",
+    CarDescription: "Drippiest Car in he word!!!!",
+    CarPicUrl: "/assets/car2.jpg",
+    CarBrand: "whatsapp",
+    CarPrice: 420,
+    CarRentalFrom: "1111",
+    CarRentalTo: "11111",
+  },
+  {
+    CarName: "test",
+    CarDescription: "Fastest Car in he word!!!!",
+    CarPicUrl: "/assets/car.jpg",
+    CarBrand: "test",
+    CarPrice: 12,
+    CarRentalFrom: "1245",
+    CarRentalTo: "1223",
+  },
+  {
+    CarName: "ford",
+    CarDescription: "Fastest Car in he word!!!!",
+    CarPicUrl: "/assets/car2.jpg",
+    CarBrand: "BMW",
+    CarPrice: 12,
+    CarRentalFrom: "1245",
+    CarRentalTo: "1223",
+  },
+  {
+    CarName: "ford",
+    CarDescription: "Fastest Car in he word!!!!",
+    CarPicUrl: "/assets/car.jpg",
+    CarBrand: "BMW",
+    CarPrice: 12,
+    CarRentalFrom: "1245",
+    CarRentalTo: "1223",
+  },
+];

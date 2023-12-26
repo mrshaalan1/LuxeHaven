@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import connect from "./dbConfig/dbConfig";
+import { NextApiRequest, NextApiResponse } from "next";
+import { NextHandler } from "next-connect";
  
-
 export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname
 
@@ -18,7 +20,20 @@ export function middleware(request: NextRequest) {
   }
     
 }
+const database = async (
+  _0: NextApiRequest,
+  _1: NextApiResponse,
+  next: NextHandler
+) => {
+  try {
+    await connect();
+  } catch (error) {
+    console.log("Database connection error ", error);
+  }
+  next();
+};
 
+export default database;
  
 // See "Matching Paths" below to learn more
 export const config = {
