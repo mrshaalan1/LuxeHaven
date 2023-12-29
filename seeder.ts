@@ -1,5 +1,6 @@
-import { cars } from "./libs/data";
+import { cars, menu } from "./libs/data";
 import Car from "./src/models/carModel";
+import Menu from "./src/models/menuModel"
 import dotenv from "dotenv";
 import connect from "./src/dbConfig/dbConfig";
 
@@ -11,8 +12,10 @@ const importData = async () => {
   try {
     // delete previous data | avoid duplication
     await Car.deleteMany();
-
     await Car.insertMany(cars);
+
+    await Menu.deleteMany();
+    await Menu.insertMany(menu);
 
     console.log("Data imported");
 
@@ -27,6 +30,8 @@ const importData = async () => {
 const destroyData = async () => {
   try {
     await Car.deleteMany();
+    await Menu.deleteMany();
+
 
     console.log("Data destroyed");
     process.exit();

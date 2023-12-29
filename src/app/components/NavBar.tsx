@@ -1,25 +1,49 @@
 "use client";
 import axios from "axios";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import LogIn from "./LogIn";
 import Image from "next/image";
-import { message } from 'antd';
-
+import { message } from "antd";
+import Cookies from "js-cookie";
 
 const Navbar = () => {
-  const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    axios
+      .get("/api/users/status")
+      .then((response) => {
+        setIsLoggedIn(response.data.isLoggedIn);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get("/api/users/status")
+      .then((response) => {
+        setIsLoggedIn(response.data.isLoggedIn);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
   const logout = async () => {
     try {
-      await axios.get("/api/users/logout");
-      message.success("Logged Out Successfully")
-      router.push("/");
-
-
+    await axios.get("/api/users/logout");
+    message.success("Logged Out Successfully");
+    Cookies.remove("token");
+    window.location.href = "/";
     } catch (error: any) {
-      console.log(error.message);
+    console.log(error.message);
     }
-  };
+   };
+   
+
+
   return (
     <div className="bg-sky">
       <div className="navbar mx-auto max-w-screen-xxl py-10 bg-secendary px-4 lg:px-8 lg:py-7 shadow-lg">
@@ -72,46 +96,46 @@ const Navbar = () => {
               Admin
             </a>
           </li>
-          <li>
-            <LogIn />
-          </li>
+          <li>{!isLoggedIn && <LogIn />}</li>
         </ul>
-        <div className="flex-none gap-2">
-          <div className="dropdown dropdown-end">
-            <div
-              tabIndex={0}
-              role="button"
-              className="btn btn-ghost btn-circle avatar"
-            >
-              <div className="rounded-full w-96">
-                <Image
-                  alt="Tailwind CSS Navbar component"
-                  src={require("../myprofile/image/default.png")}
-                />
+        {isLoggedIn && (
+          <div className="flex-none gap-2">
+            <div className="dropdown dropdown-end">
+              <div
+                tabIndex={0}
+                role="button"
+                className="btn btn-ghost btn-circle avatar"
+              >
+                <div className="rounded-full w-96">
+                  <Image
+                    alt="Tailwind CSS Navbar component"
+                    src={require("../myprofile/image/default.png")}
+                  />
+                </div>
               </div>
+              <ul
+                tabIndex={0}
+                className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-primary-dark rounded-box w-52"
+              >
+                <li>
+                  <a className="justify-between text-xl" href="/myprofile">
+                    Profile
+                  </a>
+                </li>
+                <li>
+                  <a className="justify-between text-xl" href="/myreservations">
+                    My Reservation
+                  </a>
+                </li>
+                <li>
+                  <a onClick={logout} className="justify-between text-xl">
+                    Logout
+                  </a>
+                </li>
+              </ul>
             </div>
-            <ul
-              tabIndex={0}
-              className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-primary-dark rounded-box w-52"
-            >
-              <li>
-                <a className="justify-between text-xl" href="/myprofile">
-                  Profile
-                </a>
-              </li>
-              <li>
-                <a className="justify-between text-xl" href="/myreservations">
-                  My Reservation
-                </a>
-              </li>
-              <li>
-                <a onClick={logout} className="justify-between text-xl">
-                  Logout
-                </a>
-              </li>
-            </ul>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

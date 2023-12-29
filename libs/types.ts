@@ -1,4 +1,5 @@
 export interface ICar {
+  CarId: number;
   CarName: String;
   CarDescription: String;
   CarPicUrl: string;
@@ -6,4 +7,14 @@ export interface ICar {
   CarPrice: Number;
   CarRentalFrom: String;
   CarRentalTo: String;
+}
+
+export interface IMenu {
+  RestaurantItemId: number;
+  RestaurantItemName: String;
+  RestaurantItemDescription: String;
+  RestaurantItemIngredient: String;
+  RestaurantItemType: string;
+  RestaurantItemPrice: Number;
+  RestaurantItempPicUrl: String;
 }

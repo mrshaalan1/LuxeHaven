@@ -4,6 +4,9 @@ import mongoose, { Document } from "mongoose";
 type CarDoc = Document & ICar;
 
 const CarSchema = new mongoose.Schema({
+  CarId: {
+    type: Intl,
+  },
   CarName: {
     type: String,
   },
