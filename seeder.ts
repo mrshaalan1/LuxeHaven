@@ -1,6 +1,7 @@
-import { cars, menu } from "./libs/data";
+import { cars, menu, rooms } from "./libs/data";
 import Car from "./src/models/carModel";
 import Menu from "./src/models/menuModel"
+import Room from "./src/models/roomModel"
 import dotenv from "dotenv";
 import connect from "./src/dbConfig/dbConfig";
 
@@ -17,6 +18,9 @@ const importData = async () => {
     await Menu.deleteMany();
     await Menu.insertMany(menu);
 
+    await Room.deleteMany();
+    await Room.insertMany(rooms);
+
     console.log("Data imported");
 
     // 0 is a success code and 1 (or another number) can be a failure code.
@@ -31,6 +35,8 @@ const destroyData = async () => {
   try {
     await Car.deleteMany();
     await Menu.deleteMany();
+    await Room.deleteMany();
+
 
 
     console.log("Data destroyed");

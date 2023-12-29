@@ -1,7 +1,5 @@
-import database from "../../../../middleware";
 import Car from "../../../../models/carModel";
 import { NextRequest, NextResponse } from "next/server";
-import nextConnect from 'next-connect';
 import connect from "@/dbConfig/dbConfig";
 
 connect();

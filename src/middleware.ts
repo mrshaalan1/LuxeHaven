@@ -35,11 +35,11 @@ const database = async (
 
 export default database;
  
-// See "Matching Paths" below to learn more
 export const config = {
   matcher: [
     '/admin',
     '/myprofile',
+    '/Reserve',
     '/myreservations',
   ]
 }

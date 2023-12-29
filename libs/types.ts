@@ -18,3 +18,15 @@ export interface IMenu {
   RestaurantItemPrice: Number;
   RestaurantItempPicUrl: String;
 }
+
+export interface IRoom {
+  RoomId: number;
+  RoomType: String;
+  RoomNumber: number;
+  RoomDescription: String;
+  RoomPicUrl: string;
+  RoomPrice: Number;
+  RoomRentalFrom: String;
+  RoomRentalTo: String;
+  RoomRating: Number;
+}

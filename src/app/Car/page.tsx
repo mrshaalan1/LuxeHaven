@@ -110,6 +110,10 @@ function Car() {
                <div
                 key={CarId}
                 className="bg-sand rounded overflow-hidden shadow-md m-5 p-8 relative"
+                style={{
+                  backgroundColor:
+                  CarId % 2 === 0 ? "#F7B771" : "#0A8790",
+                }}
                >
                 <Image
                   src={CarPicUrl}
@@ -128,7 +132,7 @@ function Car() {
                 <div>
                     <Link
                       className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-primary-dark hover:bg-sky rounded-full bg-primary absolute  bottom-4 right-4"
-                      href="/Car/1"
+                      href={`/Car/${CarId}`}
                     >
                       View
                     </Link>

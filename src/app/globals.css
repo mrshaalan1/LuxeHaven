@@ -25,3 +25,11 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+.room-details {
+  height: 350px;
+ }
+
+ .info-details {
+  height:550px;
+ }

@@ -1,4 +1,4 @@
-import { ICar, IMenu } from "./types";
+import { ICar, IMenu, IRoom } from "./types";
 
 export const cars: ICar[] = [
   {
@@ -53,6 +53,56 @@ export const cars: ICar[] = [
   },
 ];
 
+export const rooms: IRoom[] = [
+  {
+    RoomId: 1,
+    RoomType: "Deluxe",
+    RoomNumber: 12,
+    RoomDescription: "Lorem ipsum dolor sit amet",
+    RoomPicUrl: "/assets/rooms/Room1.png",
+    RoomPrice: 50,
+    RoomRentalFrom: "test",
+    RoomRentalTo: "test",
+    RoomRating: 4.5,
+  },
+  {
+    RoomId: 2,
+    RoomType: "Pool",
+    RoomNumber: 32,
+    RoomDescription: "Lorem ipsum dolor sit amet",
+    RoomPicUrl: "/assets/rooms/Room2.png",
+    RoomPrice: 55,
+    RoomRentalFrom: "test",
+    RoomRentalTo: "test",
+    RoomRating: 4.5,
+
+  },
+  {
+    RoomId: 3,
+    RoomType: "Superior",
+    RoomNumber: 76,
+    RoomDescription: "Lorem ipsum dolor sit amet",
+    RoomPicUrl: "/assets/rooms/Room3.png",
+    RoomPrice: 95,
+    RoomRentalFrom: "test",
+    RoomRentalTo: "test",
+    RoomRating: 4.5,
+
+  },
+  {
+    RoomId: 4,
+    RoomType: "King",
+    RoomNumber: 87,
+    RoomDescription: "Lorem ipsum dolor sit amet",
+    RoomPicUrl: "/assets/rooms/Room4.png",
+    RoomPrice: 120,
+    RoomRentalFrom: "test",
+    RoomRentalTo: "test",
+    RoomRating: 4.5,
+
+  },
+
+];
 export const menu: IMenu[] = [
   {
     RestaurantItemId: 1,
