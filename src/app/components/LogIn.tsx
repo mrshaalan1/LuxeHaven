@@ -3,8 +3,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Register from "./Register";
-import {useRouter} from "next/navigation";
-
+import { useRouter } from "next/navigation";
 
 import {
   Button,
@@ -19,11 +18,9 @@ import {
   message,
 } from "antd";
 
-
 const onFinish = (values: any) => {
   console.log("Success:", values);
 };
-
 
 const validateMessages = {
   required: "${label} is required!",
@@ -65,32 +62,30 @@ const LogIn: React.FC = () => {
   const router = useRouter();
 
   const onLogin = async () => {
-    axios.post("/api/users/login", user)
-      .then(response => {
+    axios
+      .post("/api/users/login", user)
+      .then((response) => {
         console.log("Login success", response.data);
-        message.success("Logged In Successfully")
+        message.success("Logged In Successfully");
+        localStorage.setItem("token", response.data.token);
         router.push("/myprofile");
-
       })
-      .catch(error => {
+      .catch((error) => {
         if (error.response) {
-         console.log(error.response.status);
-       
-         let errorMessage = 'An unknown error occurred';
-       
-         if (error.response.data && error.response.data.error) {
-           errorMessage = error.response.data.error;
-         }
-       
-         message.error(`Login failed: ${errorMessage}`);
+          console.log(error.response.status);
+
+          let errorMessage = "An unknown error occurred";
+
+          if (error.response.data && error.response.data.error) {
+            errorMessage = error.response.data.error;
+          }
+
+          message.error(`Login failed: ${errorMessage}`);
         } else {
-         console.log('Error', error.message);
+          console.log("Error", error.message);
         }
-       });
-       
-   };
-   
-   
+      });
+  };
 
   return (
     <>

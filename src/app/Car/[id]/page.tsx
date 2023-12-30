@@ -21,11 +21,20 @@ export default function Page() {
     CarRentalFrom: string;
     CarRentalTo: string;
   }
-
+  const [selectedCar, setSelectedCar] = useState<Car | null>(null);
   const { id } = useParams();
   const [cars, setCars] = useState<Car | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const handleCarChange = (_: any, values: any) => {
+    // Extract the carId from the values object
+    const carId = values[0];
+    setSelectedCar(carId);
+    // Send a PUT request to your API to update the reservation with the selected car
+   };
+   
+   
 
   useEffect(() => {
     fetch(`http://localhost:3000/api/cars/car/${id}`)
@@ -62,7 +71,7 @@ export default function Page() {
           <div className="grid md:grid-cols-2 gap-10">
             <div className="bg-sand mt-5 xl:mx-10 relative">
               <div className="overflow-hidden info-details">
-              <Image
+                <Image
                   src={cars.CarPicUrl}
                   alt={cars.CarName}
                   className="w-full object-cover rounded-lg"
@@ -80,11 +89,9 @@ export default function Page() {
               </div>
             </div>
             <div className="md:pt-28 text-xl text-gray-700">
-              <p>
-                {cars.CarDescription}
-              </p>
+              <p>{cars.CarDescription}</p>
               <Space direction="vertical" size={12} className="pt-10">
-                <RangePicker className="w-96 h-10 text-2xl" />
+              <RangePicker onChange={handleCarChange} className="w-96 h-10 text-2xl" />
               </Space>
               <div className="pt-5">
                 <label htmlFor="Status" className="bg-gray-100 ">
@@ -104,12 +111,12 @@ export default function Page() {
         >
           Go Back
         </Link>
-        <Link
+        <button
           className="bg-green-600 text-sky text-s uppercase font-bold rounded-full p-2 shadow-md"
-          href="/Car"
+          onClick={(e) => { e.preventDefault(); handleCarChange(selectedCar?.CarId || '', true); }}
         >
           Order
-        </Link>
+        </button>
       </div>
       <div>
         <Footer />

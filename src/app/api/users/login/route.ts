@@ -22,22 +22,23 @@ export async function POST(request: NextRequest) {
     }
 
     console.log("user exists");
-    
+
     if (!user.isVerfied) {
       return NextResponse.json(
         { error: "Please check your email and confirm your account" },
         { status: 400 }
       );
-     }
+    }
 
-    //check if password is correct
     const validPassword = await bcryptjs.compare(Password, user.Password);
     if (!validPassword) {
-      return NextResponse.json({ error: "Invalid Email or Password" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Invalid Email or Password" },
+        { status: 400 }
+      );
     }
     console.log(user);
 
-    //create token data
     const tokenData = {
       id: user._id,
       username: user.Username,
@@ -52,11 +53,16 @@ export async function POST(request: NextRequest) {
       message: "Login successful",
       success: true,
       isLoggedIn: true,
-     });
-  response.cookies.set("token", token, {
-   httpOnly: true,
- });
- console.log('Set token:', token);
+      token: token,
+    });
+
+    response.cookies.set("token", token, {
+      httpOnly: true,
+    });
+
+    //localStorage.setItem("token", token);
+
+    console.log("Set token:", token);
 
     return response;
   } catch (error: any) {
