@@ -7,8 +7,6 @@ export interface ICar {
   CarPicUrl: string;
   CarBrand: String;
   CarPrice: Number;
-  CarRentalFrom: String;
-  CarRentalTo: String;
 }
 
 export interface IMenu {
@@ -28,8 +26,6 @@ export interface IRoom {
   RoomDescription: String;
   RoomPicUrl: string;
   RoomPrice: Number;
-  RoomRentalFrom: String;
-  RoomRentalTo: String;
   RoomRating: Number;
 }
 
@@ -38,9 +34,12 @@ export interface IReservation {
   customer: mongoose.Types.ObjectId;
   room: mongoose.Types.ObjectId;
   menuItem: mongoose.Types.ObjectId;
-  car: mongoose.Types.ObjectId;
+  //TODO: change to object
+  CarId: number;
   reservationFrom: string;
   reservationTo: string;
+  CarRentalTo: string;
+  CarRentalFrom: string;
   spa: boolean;
   gym: boolean;
  }

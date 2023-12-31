@@ -22,12 +22,6 @@ const RoomSchema = new mongoose.Schema({
   RoomPrice: {
     type: Intl,
   },
-  RoomRentalFrom: {
-    type: String,
-  },
-  RoomRentalTo: {
-    type: String,
-  },
   RoomRating: {
     type:Intl,
   },

@@ -6,7 +6,9 @@ import Image from "next/image";
 import Link from "next/link";
 import Footer from "@/app/components/Footer";
 import React, { useEffect, useState } from "react";
-import { DatePicker, Space } from "antd";
+import { DatePicker, Space, message } from "antd";
+import axios from "axios";
+import dayjs, { Dayjs } from "dayjs";
 
 const { RangePicker } = DatePicker;
 
@@ -18,24 +20,21 @@ export default function Page() {
     CarBrand: string;
     CarPrice: number;
     CarDescription: string;
-    CarRentalFrom: string;
-    CarRentalTo: string;
   }
-  const [selectedCar, setSelectedCar] = useState<Car | null>(null);
   const { id } = useParams();
+  const [carRentalFrom, setCarRentalFrom] = useState<Dayjs | null>(null);
+  const [carRentalTo, setCarRentalTo] = useState<Dayjs | null>(null);
   const [cars, setCars] = useState<Car | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const handleCarChange = (_: any, values: any) => {
-    // Extract the carId from the values object
-    const carId = values[0];
-    setSelectedCar(carId);
-    // Send a PUT request to your API to update the reservation with the selected car
-   };
-   
-   
-
+  const disabledDate = (current: any) => {
+    return (
+      current &&
+      (current < dayjs().endOf("day") ||
+        current < dayjs(carRentalFrom).add(1, "day"))
+    );
+  };
   useEffect(() => {
     fetch(`http://localhost:3000/api/cars/car/${id}`)
       .then((response) => response.json())
@@ -57,6 +56,36 @@ export default function Page() {
 
   if (loading) return "Loading...";
   if (error) return "An error occurred.";
+  const onReserve = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("No token found in local storage!");
+      return;
+    }
+    if (!cars) {
+      console.error("No car selected!");
+      return;
+    }
+    axios
+      .post("http://localhost:3000/api/reservation/new", {
+        car: cars.CarId,
+        carRentalFrom: carRentalFrom,
+        carRentalTo: carRentalTo,
+        token: token,
+      })
+      .then((response) => {
+        console.log("Rental success", response.data);
+        message.success("Rental Successful");
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 400) {
+          message.error("User already rented a Car");
+        } else {
+          console.error("There was an error!", error);
+        }
+      });
+  };
+
   return (
     <div className="bg-sky">
       <Navbar />
@@ -91,7 +120,16 @@ export default function Page() {
             <div className="md:pt-28 text-xl text-gray-700">
               <p>{cars.CarDescription}</p>
               <Space direction="vertical" size={12} className="pt-10">
-              <RangePicker onChange={handleCarChange} className="w-96 h-10 text-2xl" />
+                <RangePicker
+                  disabledDate={disabledDate}
+                  className="w-96 h-10 text-2xl"
+                  onCalendarChange={(dates) => {
+                    if (dates) {
+                      setCarRentalFrom(dates[0]);
+                      setCarRentalTo(dates[1]);
+                    }
+                  }}
+                />{" "}
               </Space>
               <div className="pt-5">
                 <label htmlFor="Status" className="bg-gray-100 ">
@@ -113,7 +151,7 @@ export default function Page() {
         </Link>
         <button
           className="bg-green-600 text-sky text-s uppercase font-bold rounded-full p-2 shadow-md"
-          onClick={(e) => { e.preventDefault(); handleCarChange(selectedCar?.CarId || '', true); }}
+          onClick={onReserve}
         >
           Order
         </button>

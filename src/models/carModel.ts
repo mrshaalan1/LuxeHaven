@@ -22,12 +22,6 @@ const CarSchema = new mongoose.Schema({
   CarPrice: {
     type: Intl,
   },
-  CarRentalFrom: {
-    type: String,
-  },
-  CarRentalTo: {
-    type: String,
-  },
 });
 
 const Car =

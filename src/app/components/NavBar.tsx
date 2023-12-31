@@ -5,7 +5,7 @@ import LogIn from "./LogIn";
 import Image from "next/image";
 import { message } from "antd";
 import Cookies from "js-cookie";
-
+[];
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -33,16 +33,15 @@ const Navbar = () => {
 
   const logout = async () => {
     try {
-    await axios.get("/api/users/logout");
-    message.success("Logged Out Successfully");
-    Cookies.remove("token");
-    window.location.href = "/";
+      await axios.get("/api/users/logout");
+      message.success("Logged Out Successfully");
+      Cookies.remove("token");
+      localStorage.removeItem("token");
+      window.location.href = "/";
     } catch (error: any) {
-    console.log(error.message);
+      console.log(error.message);
     }
-   };
-   
-
+  };
 
   return (
     <div className="bg-sky">

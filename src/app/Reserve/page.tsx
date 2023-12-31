@@ -8,14 +8,14 @@ import Footer from "@/app/components/Footer";
 import Image from "next/image";
 import { Carousel, Rate, Button, message } from "antd";
 import axios from "axios";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 
 const { RangePicker } = DatePicker;
 
 function Reserve() {
   const [roomType, setRoomType] = useState("");
-  const [checkInDate, setCheckInDate] = useState(null);
-  const [checkOutDate, setCheckOutDate] = useState(null);
+  const [checkInDate, setCheckInDate] = useState<Dayjs | null>(null);
+  const [checkOutDate, setCheckOutDate] = useState<Dayjs | null>(null);
   const [spa, setSpa] = useState(false);
   const [gym, setGym] = useState(false);
 
@@ -37,7 +37,6 @@ function Reserve() {
   }, []);
 
   const disabledDate = (current: any) => {
-    // Can not select days before today and today
     return (
       current &&
       (current < dayjs().endOf("day") ||
@@ -74,24 +73,12 @@ function Reserve() {
         message.success("Reservation Successful");
       })
       .catch((error) => {
-        console.error("There was an error!", error);
+        if (error.response && error.response.status === 400) {
+          message.error("User already reserved a room");
+        } else {
+          console.error("There was an error!", error);
+        }
       });
-  };
-
-  const handleCheckInChange = (date: any) => {
-    setCheckInDate(date);
-  };
-
-  const handleCheckOutChange = (date: any) => {
-    setCheckOutDate(date);
-  };
-
-  const onCheckInDateChange = (date: any) => {
-    setCheckInDate(date);
-  };
-
-  const onCheckOutDateChange = (date: any) => {
-    setCheckOutDate(date);
   };
 
   const onSpaChange = (e: any) => {
@@ -147,20 +134,15 @@ function Reserve() {
             size={12}
             className="felx object-none justify-center w-full"
           >
-            {/* <RangePicker
+            <RangePicker
               disabledDate={disabledDate}
               className="border rounded w-full py-2 px-3 text-gray-700 mb-3 bg-gray-100 text-2xl"
-              onChange={onCheckInDateChange}
-            /> */}
-            <DatePicker
-              disabledDate={disabledDate}
-              className="border rounded w-full py-2 px-3 text-gray-700 mb-3 bg-gray-100 text-2xl"
-              onChange={handleCheckInChange}
-            />
-            <DatePicker
-              disabledDate={disabledDate}
-              className="border rounded w-full py-2 px-3 text-gray-700 mb-3 bg-gray-100 text-2xl"
-              onChange={handleCheckOutChange}
+              onCalendarChange={(dates) => {
+                if (dates) {
+                  setCheckInDate(dates[0]);
+                  setCheckOutDate(dates[1]);
+                }
+              }}
             />
           </Space>
           <Checkbox

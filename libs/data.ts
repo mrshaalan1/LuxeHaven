@@ -8,8 +8,6 @@ export const cars: ICar[] = [
     CarPicUrl: "/assets/cars/car.jpg",
     CarBrand: "BMW",
     CarPrice: 60,
-    CarRentalFrom: "1245",
-    CarRentalTo: "1223",
   },
   {
     CarId: 2,
@@ -18,8 +16,6 @@ export const cars: ICar[] = [
     CarPicUrl: "/assets/cars/car2.jpg",
     CarBrand: "whatsapp",
     CarPrice: 420,
-    CarRentalFrom: "1111",
-    CarRentalTo: "11111",
   },
   {
     CarId: 3,
@@ -28,8 +24,6 @@ export const cars: ICar[] = [
     CarPicUrl: "/assets/cars/car3.jpg",
     CarBrand: "test",
     CarPrice: 45,
-    CarRentalFrom: "1245",
-    CarRentalTo: "1223",
   },
   {
     CarId: 4,
@@ -38,8 +32,6 @@ export const cars: ICar[] = [
     CarPicUrl: "/assets/cars/car2.jpg",
     CarBrand: "batata",
     CarPrice: 55,
-    CarRentalFrom: "1245",
-    CarRentalTo: "1223",
   },
   {
     CarId: 5,
@@ -48,8 +40,6 @@ export const cars: ICar[] = [
     CarPicUrl: "/assets/cars/car3.jpg",
     CarBrand: "BMW",
     CarPrice: 33,
-    CarRentalFrom: "1245",
-    CarRentalTo: "1223",
   },
 ];
 
@@ -61,8 +51,6 @@ export const rooms: IRoom[] = [
     RoomDescription: "Lorem ipsum dolor sit amet",
     RoomPicUrl: "/assets/rooms/Room1.png",
     RoomPrice: 50,
-    RoomRentalFrom: "test",
-    RoomRentalTo: "test",
     RoomRating: 4.5,
   },
   {
@@ -72,8 +60,6 @@ export const rooms: IRoom[] = [
     RoomDescription: "Lorem ipsum dolor sit amet",
     RoomPicUrl: "/assets/rooms/Room2.png",
     RoomPrice: 55,
-    RoomRentalFrom: "test",
-    RoomRentalTo: "test",
     RoomRating: 4.5,
 
   },
@@ -84,8 +70,6 @@ export const rooms: IRoom[] = [
     RoomDescription: "Lorem ipsum dolor sit amet",
     RoomPicUrl: "/assets/rooms/Room3.png",
     RoomPrice: 95,
-    RoomRentalFrom: "test",
-    RoomRentalTo: "test",
     RoomRating: 4.5,
 
   },
@@ -96,8 +80,6 @@ export const rooms: IRoom[] = [
     RoomDescription: "Lorem ipsum dolor sit amet",
     RoomPicUrl: "/assets/rooms/Room4.png",
     RoomPrice: 120,
-    RoomRentalFrom: "test",
-    RoomRentalTo: "test",
     RoomRating: 4.5,
 
   },
