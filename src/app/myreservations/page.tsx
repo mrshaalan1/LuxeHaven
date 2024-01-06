@@ -41,13 +41,11 @@ export default function myreservations() {
               const roomResponse = await axios.get(
                 `http://localhost:3000/api/rooms/${reservation.RoomId}`
               );
-              console.log(reservation.CarId);
               
               const carResponse = await axios.get(
-                `http://localhost:3000/api/cars/car/${reservation.CarId}`
+                `http://localhost:3000/api/cars/car/${reservation.carReservation.CarId}`
               );
               setCarDetails(carResponse.data.car);
-              console.log(carResponse.data.car);
               
               setRoomDetails(roomResponse.data.room);
               
@@ -131,7 +129,7 @@ export default function myreservations() {
                         <div>
                           <Link
                             className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-primary-dark hover:bg-sky rounded-full bg-primary absolute  bottom-4 right-4"
-                            href="/Reserve"
+                            href="/myreservations"
                           >
                             View
                           </Link>
@@ -144,25 +142,29 @@ export default function myreservations() {
                         </div>
                       </div>
                     )}
-
-                    <div className=" bg-primary-dark rounded overflow-hidden shadow-md mt-10 mx-72 p-8 relative">
-                      {/* <Image
-                            src={require("./room service/car.jpg")}
-                            alt="Car"
-                            className="w-full h-32 sm:h-48 object-none hover:object-scale-down rounded-lg "
-                          /> */}
+                    {carDetails &&(
+                      <div className=" bg-primary-dark rounded overflow-hidden shadow-md mt-10 mx-72 p-8 relative">
+                      <Image
+                            src={carDetails.CarPicUrl}
+                            alt={carDetails.CarName}
+                            className="w-full object-cover rounded-lg"
+                            height={500}
+                            width={500}
+                          />
                       <div>
                         <Link
                           className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-primary-dark hover:bg-sky rounded-full bg-primary absolute  bottom-4 right-4"
-                          href="/Reserve"
+                          href="/myreservations"
                         >
                           View
                         </Link>
                       </div>
                       <div className="bg-primary-dark text-sky text-xs uppercase font-bold rounded-full p-2 absolute top-0 mt-9 ml-1 shadow-md">
-                        <span>Model</span>
+                        <span>{carDetails.CarName}</span>
                       </div>
                     </div>
+                    )}
+                    
                   </>
                 ))}
               </div>
