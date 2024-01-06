@@ -39,7 +39,6 @@ export default function myprofile() {
   useEffect(() => {
     getUserDetails();
   }, []);
-  // Initialize the state with the UserData interface
   const [data, setData] = useState<UserData | null>(null);
 
   const [loading, setLoading] = useState(false);

@@ -22,9 +22,9 @@ export default function Page() {
     CarDescription: string;
   }
   const { id } = useParams();
+  const [cars, setCars] = useState<Car | null>(null);
   const [carRentalFrom, setCarRentalFrom] = useState<Dayjs | null>(null);
   const [carRentalTo, setCarRentalTo] = useState<Dayjs | null>(null);
-  const [cars, setCars] = useState<Car | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -80,6 +80,14 @@ export default function Page() {
       .catch((error) => {
         if (error.response && error.response.status === 400) {
           message.error("User already rented a Car");
+        } else if (error.response && error.response.status === 405) {
+          message.error(
+            "User must have a Room reservation before renting a Car"
+          );
+        } else if (error.response && error.response.status === 406) {
+          message.error(
+            "Car rental period cannot be outside the room reservation period"
+          );
         } else {
           console.error("There was an error!", error);
         }

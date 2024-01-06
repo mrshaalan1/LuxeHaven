@@ -24,7 +24,7 @@ function Room() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/rooms/room")
+    fetch("http://localhost:3000/api/rooms")
       .then((response) => response.json())
       .then((data) => {
         console.log(data);

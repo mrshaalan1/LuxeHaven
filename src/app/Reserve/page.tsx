@@ -13,28 +13,43 @@ import dayjs, { Dayjs } from "dayjs";
 const { RangePicker } = DatePicker;
 
 function Reserve() {
+  interface Room {
+    RoomId: number;
+    RoomType: string;
+    RoomDescription: string;
+    RoomPicUrl: string;
+    RoomNumber: number;
+    RoomPrice: number;
+    RoomRentalFrom: string;
+    RoomRentalTo: string;
+    RoomRating: number;
+    __v: number;
+  }
+  const [rooms, setRooms] = useState<Room[]>([]);
   const [roomType, setRoomType] = useState("");
   const [checkInDate, setCheckInDate] = useState<Dayjs | null>(null);
   const [checkOutDate, setCheckOutDate] = useState<Dayjs | null>(null);
   const [spa, setSpa] = useState(false);
   const [gym, setGym] = useState(false);
+  const [messageApi, contextHolder] = message.useMessage();
 
   const onRoomTypeChange = (e: any) => {
     setRoomType(e.target.value);
   };
 
-  const [messageApi, contextHolder] = message.useMessage();
-
   useEffect(() => {
     axios
-      .get("http://localhost:3000/api/rooms/room")
+      .get("http://localhost:3000/api/rooms")
       .then((response) => {
-        setRooms(response.data.room);
+        if (Array.isArray(response.data.room)) {
+          setRooms(response.data.room);
+        }
       })
       .catch((error) => {
         console.error("There was an error!", error);
       });
-  }, []);
+   }, []);
+   
 
   const disabledDate = (current: any) => {
     return (
@@ -44,22 +59,22 @@ function Reserve() {
     );
   };
 
-  const success = () => {
-    messageApi.open({
-      type: "success",
-      content: "Reservation Successful!",
-    });
-  };
-
   const onReserve = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
       console.error("No token found in local storage!");
       return;
     }
+    const selectedRoom = rooms.find((room) => room.RoomType === roomType);
+
+    if (!selectedRoom) {
+      console.error("No room selected!");
+      return;
+    }
 
     axios
       .post("http://localhost:3000/api/reservation/new", {
+        RoomId: selectedRoom.RoomId,
         roomType: roomType,
         checkInDate: checkInDate,
         checkOutDate: checkOutDate,
@@ -88,20 +103,6 @@ function Reserve() {
   const onGymChange = (e: any) => {
     setGym(e.target.checked);
   };
-  const [rooms, setRooms] = useState<IRoom[]>([]);
-
-  interface IRoom {
-    RoomId: number;
-    RoomType: string;
-    RoomDescription: string;
-    RoomPicUrl: string;
-    RoomNumber: number;
-    RoomPrice: number;
-    RoomRentalFrom: string;
-    RoomRentalTo: string;
-    RoomRating: number;
-    __v: number;
-  }
 
   return (
     <div className="Reserve bg-sky">

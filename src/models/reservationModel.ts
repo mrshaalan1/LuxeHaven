@@ -1,56 +1,19 @@
-import mongoose, { Document } from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
 import { IReservation } from "@/../libs/types";
 
 type ReservationDoc = Document & IReservation;
 
 const ReservationSchema = new mongoose.Schema({
-  customer: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
-  //TODO: change to required: true
-  room: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Room",
-    required: false,
-  },
-  menuItem: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Menu",
-    required: false,
-  },
-  CarId: {
-    //TODO: change to object
-    type: Intl,
-    ref: "Car",
-    required: false,
-  },
-  //TODO: change to required: true
-  reservationFrom: {
-    type: String,
-    required: false,
-  },
-  //TODO: change to required: true
-  reservationTo: {
-    type: String,
-    required: false,
-  },
-  CarRentalFrom: {
-    type: String,
-    required: false,
-  },
-  CarRentalTo: {
-    type: String,
-    required: false,
-  },
-  spa: {
-    type: Boolean,
-    default: false,
-  },
-  gym: {
-    type: Boolean,
-    default: false,
+  customer: { type: Schema.Types.ObjectId, ref: "User",require: true },
+  RoomId: { type: Number, ref: "Room", require: true },
+  reservationFrom: {type: Date, require: true}, 
+  reservationTo: {type: Date, require: true},
+  spa: Boolean,
+  gym: Boolean,
+  carReservation: {
+    CarId: Number,
+    CarRentalFrom: Date,
+    CarRentalTo: Date,
   },
 });
 

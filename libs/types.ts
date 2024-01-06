@@ -36,10 +36,10 @@ export interface IReservation {
   menuItem: mongoose.Types.ObjectId;
   //TODO: change to object
   CarId: number;
-  reservationFrom: string;
-  reservationTo: string;
-  CarRentalTo: string;
-  CarRentalFrom: string;
+  reservationFrom: Date;
+  reservationTo: Date;
+  CarRentalTo: Date;
+  CarRentalFrom: Date;
   spa: boolean;
   gym: boolean;
  }
