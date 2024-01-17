@@ -63,15 +63,15 @@ export default function Page() {
                   src={dishs.RestaurantItempPicUrl}
                   alt={dishs.RestaurantItemName}
                   className="w-full object-cover rounded-lg"
-                  height={500}
-                  width={500}
+                  height={1000}
+                  width={1000}
                 />
               </div>
-              <div className="bg-primary-dark text-sky text-xs uppercase font-bold rounded-full p-2 absolute top-0 mt-3 ml-3 shadow-md">
+              <div className="bg-primary-dark text-sky text-s uppercase font-bold rounded-full p-2 absolute top-0 mt-3 ml-3 shadow-md">
                 <span>{dishs.RestaurantItemType}</span>
               </div>
               <div>
-                <div className="bg-primary-dark text-sky text-xs uppercase font-bold rounded-full p-2 absolute mb-3 mr-3 shadow-md bottom-0 right-0 flex">
+                <div className="bg-primary-dark text-sky text-s uppercase font-bold rounded-full p-2 absolute mb-3 mr-3 shadow-md bottom-0 right-0 flex">
                   <span>Price: {dishs.RestaurantItemPrice}$</span>
                 </div>
               </div>

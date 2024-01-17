@@ -39,7 +39,6 @@ export const config = {
   matcher: [
     '/admin',
     '/myprofile',
-    '/Reserve',
     '/myreservations',
   ]
 }

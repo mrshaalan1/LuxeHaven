@@ -50,13 +50,8 @@ function Menu() {
     <div className="Menu bg-sky">
       <Navbar />
 
-      <div>
-        <h1 className=" text-6xl text-primary flex justify-center font-sans font-semibold py-5">
-          {" "}
-          Our Menu
-        </h1>
-      </div>
-      <div className="flex justify-center">
+      
+      <div className="flex justify-center mb-5 mt-10">
         <div className="join">
           <div>
             <div>
@@ -127,39 +122,36 @@ function Menu() {
                 RestaurantItemName,
                 RestaurantItemIngredient,
                 RestaurantItemType,
+                RestaurantItemPrice,
               }) => (
                 <>
                   <div
                     key={RestaurantItemId}
-                    className="rounded overflow-hidden shadow-md m-5 p-8 relative"
+                    className=" rounded-2xl overflow-hidden shadow-xl m-5 p-3 relative"
                     style={{
-                      backgroundColor:
-                        RestaurantItemId % 2 === 0 ? "#F7B771" : "#0A8790",
+                      backgroundColor: "#009688",                    
                     }}
                   >
-                    <Image
-                      src={RestaurantItempPicUrl}
-                      alt={RestaurantItemName}
-                      className="w-full h-32 sm:h-48 object-cover rounded-lg"
-                      height={500}
-                      width={500}
-                    />
+                    <Link href={`/Menu/${RestaurantItemId}`}>
+                      <Image
+                        src={RestaurantItempPicUrl}
+                        alt={RestaurantItemName}
+                        className="w-full h-52 object-cover rounded-lg cursor-pointer"
+                        height={500}
+                        width={500}
+                      />
+                    </Link>
                     <div className=" m-4">
-                      <span className=" font-bold">{RestaurantItemName} </span>
-                      <span className=" block text-slate-700 text-sm">
+                      <span className=" font-bold">{RestaurantItemName}</span>
+                      <span className=" block text-zinc-200 text-sm ">
                         {RestaurantItemIngredient}{" "}
                       </span>
                     </div>
-                    <div>
-                      <Link
-                        className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-primary-dark hover:bg-sky rounded-full bg-primary absolute bottom-4 right-4"
-                        href={`/Menu/${RestaurantItemId}`}
-                      >
-                        View
-                      </Link>
-                    </div>
-                    <div className="bg-primary-dark text-sky text-xs uppercase font-bold rounded-full p-2 absolute top-0 mt-9 ml-1 shadow-md">
+                    <div className="bg-primary text-sky text-xs uppercase font-bold rounded-full p-2 absolute top-0 mt-4 ml-1 shadow-md">
                       <span>{RestaurantItemType}</span>
+                    </div>
+                    <div className="bg-primary text-sky text-s uppercase font-bold rounded-full p-2 absolute bottom-24 right-5 mt-4 ml-1 shadow-md">
+                      <span>${RestaurantItemPrice}</span>
                     </div>
                   </div>
                 </>

@@ -40,7 +40,7 @@ export default function Home() {
           </li>
           <li className=" lg:col-span-1 col-span-4 md:col-start-2 xs:col-start-1">
             <Image
-              className="h-56 lg:w-96 xs:w-full object-cover"
+              className="h-56 w-full object-cover"
               src={require("./images/home/relaxing.png")}
               alt="relaxing"
             />

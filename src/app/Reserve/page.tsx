@@ -9,6 +9,8 @@ import Image from "next/image";
 import { Carousel, Rate, Button, message } from "antd";
 import axios from "axios";
 import dayjs, { Dayjs } from "dayjs";
+import Swal from 'sweetalert2';
+
 
 const { RangePicker } = DatePicker;
 
@@ -85,12 +87,29 @@ function Reserve() {
 
       .then((response) => {
         console.log("Reservation success", response.data);
-        message.success("Reservation Successful");
+        //message.success("Reservation Successful");
+        Swal.fire({
+          icon: "success",
+          title: "Reservation Sucessfull",
+          showConfirmButton: false,
+          timer: 1500
+        });
       })
       .catch((error) => {
         if (error.response && error.response.status === 400) {
-          message.error("User already reserved a room");
+          //message.error("User already reserved a room");
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "User already reserved a room!",
+          });
+          
         } else {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "User already reserved a room!",
+          });
           console.error("There was an error!", error);
         }
       });

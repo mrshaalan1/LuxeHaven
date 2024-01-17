@@ -21,6 +21,7 @@ export default function Page() {
     CarPrice: number;
     CarDescription: string;
   }
+  
   const { id } = useParams();
   const [cars, setCars] = useState<Car | null>(null);
   const [carRentalFrom, setCarRentalFrom] = useState<Dayjs | null>(null);

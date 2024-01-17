@@ -28,6 +28,32 @@ export default function myreservations() {
   const [carDetails, setCarDetails] = useState<Record<string, any>>({});
   const [reservations, setReservations] = useState<Reservation[]>([]);
 
+  const deleteReservation = async (
+    reservationId: any,
+    reservationType: any
+  ) => {
+    try {
+      console.log("1");
+
+      await axios.delete(`http://localhost:3000/api/users/deletereservation`, {
+        data: JSON.stringify({ reservationId, reservationType }),
+      });
+
+      console.log(reservationId);
+      console.log(reservationType);
+
+      setReservations((prevReservations) =>
+        prevReservations.filter(
+          (reservation) => reservation._id.$oid !== reservationId
+        )
+      );
+    } catch (error) {
+      console.log("4");
+
+      console.error("Error:", error);
+    }
+  };
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -37,19 +63,23 @@ export default function myreservations() {
         })
         .then((response) => {
           const updatedReservations = response.data.reservations.map(
-            async (reservation:any) => {
+            async (reservation: any) => {
               const roomResponse = await axios.get(
                 `http://localhost:3000/api/rooms/${reservation.RoomId}`
               );
-              
+
               const carResponse = await axios.get(
                 `http://localhost:3000/api/cars/car/${reservation.carReservation.CarId}`
               );
               setCarDetails(carResponse.data.car);
-              
+
               setRoomDetails(roomResponse.data.room);
-              
-              return { ...reservation, roomDetails: roomResponse.data.room, carDetails:carResponse.data.car};
+
+              return {
+                ...reservation,
+                roomDetails: roomResponse.data.room,
+                carDetails: carResponse.data.car,
+              };
             }
           );
           Promise.all(updatedReservations)
@@ -116,16 +146,15 @@ export default function myreservations() {
                 {reservations.map((reservation) => (
                   <>
                     {roomDetails && (
-                      
                       <div className=" bg-sand overflow-hidden shadow-md mt-10 mx-72 p-6 rounded-md relative">
                         {/* <h1>{JSON.stringify(roomDetails)}</h1> */}
                         <Image
-                            src={roomDetails.RoomPicUrl}
-                            alt={roomDetails.RoomType}
-                            className="w-full object-cover rounded-lg"
-                            height={500}
-                            width={500}
-                          />
+                          src={roomDetails.RoomPicUrl}
+                          alt={roomDetails.RoomType}
+                          className="w-full object-cover rounded-lg"
+                          height={500}
+                          width={500}
+                        />
                         <div>
                           <Link
                             className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-primary-dark hover:bg-sky rounded-full bg-primary absolute  bottom-4 right-4"
@@ -138,33 +167,50 @@ export default function myreservations() {
                           <span>{roomDetails.RoomType}</span>
                         </div>
                         <div className="bg-primary-dark text-sky text-xs uppercase font-bold rounded-full p-2 absolute top-0 right-0 mt-9 mr-1 shadow-md">
-                          <span className="text-l">Room Number: {roomDetails.RoomNumber}</span>
+                          <span className="text-l">
+                            Room Number: {roomDetails.RoomNumber}
+                          </span>
                         </div>
-                      </div>
-                    )}
-                    {carDetails &&(
-                      <div className=" bg-primary-dark rounded overflow-hidden shadow-md mt-10 mx-72 p-8 relative">
-                      <Image
-                            src={carDetails.CarPicUrl}
-                            alt={carDetails.CarName}
-                            className="w-full object-cover rounded-lg"
-                            height={500}
-                            width={500}
-                          />
-                      <div>
-                        <Link
-                          className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-primary-dark hover:bg-sky rounded-full bg-primary absolute  bottom-4 right-4"
-                          href="/myreservations"
+                        <button
+                          className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-primary-dark hover:bg-sky rounded-full bg-primary absolute bottom-4 right-4"
+                          onClick={() =>
+                            deleteReservation(reservation._id.$oid, "room")
+                          }
                         >
-                          View
-                        </Link>
+                          Delete Room Reservation
+                        </button>
                       </div>
-                      <div className="bg-primary-dark text-sky text-xs uppercase font-bold rounded-full p-2 absolute top-0 mt-9 ml-1 shadow-md">
-                        <span>{carDetails.CarName}</span>
-                      </div>
-                    </div>
                     )}
-                    
+                    {carDetails && (
+                      <div className=" bg-primary-dark rounded overflow-hidden shadow-md mt-10 mx-72 p-8 relative">
+                        <Image
+                          src={carDetails.CarPicUrl}
+                          alt={carDetails.CarName}
+                          className="w-full object-cover rounded-lg"
+                          height={500}
+                          width={500}
+                        />
+                        <div>
+                          <Link
+                            className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-primary-dark hover:bg-sky rounded-full bg-primary absolute  bottom-4 right-4"
+                            href="/myreservations"
+                          >
+                            View
+                          </Link>
+                        </div>
+                        <div className="bg-primary-dark text-sky text-xs uppercase font-bold rounded-full p-2 absolute top-0 mt-9 ml-1 shadow-md">
+                          <span>{carDetails.CarName}</span>
+                        </div>
+                        <button
+                          className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-primary-dark hover:bg-sky rounded-full bg-primary absolute bottom-4 right-4"
+                          onClick={() =>
+                            deleteReservation(reservation._id.$oid, "car")
+                          }
+                        >
+                          Delete Car Reservation
+                        </button>
+                      </div>
+                    )}
                   </>
                 ))}
               </div>

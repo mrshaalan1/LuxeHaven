@@ -30,3 +30,28 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: error }, { status: 500 });
   }
 }
+
+export async function DELETE(request: NextRequest) {
+  try {
+   const reqBody = await request.json();
+   const { reservationId, reservationType } = reqBody;
+ 
+   if (reservationType === 'room') {
+     await Reservation.updateOne(
+       { _id: reservationId },
+       { $unset: { RoomId: "" } }
+     );
+   } else if (reservationType === 'car') {
+     await Reservation.updateOne(
+       { _id: reservationId },
+       { $unset: { CarId: "" } }
+     );
+   }
+ 
+   return NextResponse.json({ message: "Reservation deleted successfully" }, { status: 200 });
+  } catch (error: any) {
+   console.error("Error:", error);
+   return NextResponse.json({ message: error }, { status: 500 });
+  }
+ }
+ 

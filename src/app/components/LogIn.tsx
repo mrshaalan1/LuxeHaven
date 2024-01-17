@@ -17,6 +17,8 @@ import {
   Space,
   message,
 } from "antd";
+import { faSignInAlt } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const onFinish = (values: any) => {
   console.log("Success:", values);
@@ -95,7 +97,8 @@ const LogIn: React.FC = () => {
         onClick={showDrawer}
       >
         Log In
-      </Button>
+        <FontAwesomeIcon icon={faSignInAlt} size="xs" />
+        </Button>
 
       <Drawer
         title={isRegistering ? "Register" : "Log In"}

@@ -8,7 +8,7 @@ const config: Config = {
   ],
   theme: {
     screens: {
-      'xs': '475px',
+      'xs': '320px',
       'sm': '640px',
       'md': '768px',
       'lg': '1024px',
@@ -22,12 +22,12 @@ const config: Config = {
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
       colors: {
-        'primary' : "#09A1C0",
-        'secendary' : "#0D9EF5",
-        'sand' : "#F7B771",
-        'sky' : "#e0e7f8",
+        'primary' : "#3F51B5",
+        'secendary' : "#009688",
+        'sand' : "#FFC107",
+        'sky' : "#C5CAE9",
         'water': "#2F78CB",
-        'primary-dark' : "#0A8790"
+        'primary-dark' : "#303F9F"
       }
     },
   },

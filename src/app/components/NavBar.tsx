@@ -5,9 +5,20 @@ import LogIn from "./LogIn";
 import Image from "next/image";
 import { message } from "antd";
 import Cookies from "js-cookie";
-[];
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faUser,
+  faHome,
+  faCar,
+  faBed,
+  faUsersCog,
+  faSignInAlt,
+  faUtensils,
+} from "@fortawesome/free-solid-svg-icons";
+
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showBurgerMenu, setShowBurgerMenu] = useState(false);
 
   useEffect(() => {
     axios
@@ -42,63 +53,79 @@ const Navbar = () => {
       console.log(error.message);
     }
   };
-
+  const toggleBurgerMenu = () => {
+    setShowBurgerMenu(!showBurgerMenu);
+  };
   return (
-    <div className="bg-sky">
-      <div className="navbar mx-auto max-w-screen-xxl py-10 bg-secendary px-4 lg:px-8 lg:py-7 shadow-lg">
-        <div className="flex-1">
+    <div>
+      <div className="navbar mx-auto max-w-screen-xxl py-10 bg-primary-dark px-4 lg:px-8 lg:py-7 shadow-lg">
+        <div className="flex items-center justify-between mr-auto">
           <a
-            className=" btn btn-ghost mr-4 cursor-pointer py-1.5 font-sans font-extrabold hover:text-sand text-4xl navbar-brand"
+            className="btn btn-ghost mr-4 cursor-pointer py-1.5 font-sans font-extrabold hover:text-sand text-4xl h-28 "
             href="/"
           >
+            <Image
+              src="/assets/logo/luxe logo.png"
+              alt="{RoomType}"
+              height={100}
+              width={100}
+            />
             LuxeHaven
           </a>
         </div>
-        <ul className="menu menu-horizontal flex-auto">
+        <div
+          className="burger-menu cursor-pointer lg:hidden"
+          onClick={toggleBurgerMenu}
+        >
+          <div className={`bar ${showBurgerMenu ? "active" : ""}`}></div>
+          <div className={`bar ${showBurgerMenu ? "active" : ""}`}></div>
+          <div className={`bar ${showBurgerMenu ? "active" : ""}`}></div>
+        </div>
+        <ul
+          className={`menu menu-horizontal lg:flex-auto ${
+            showBurgerMenu ? "hidden" : "flex"
+          }`}
+        >
           <li>
             <a
-              className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-sand px-16 sm:px-auto text-2xl"
-              href="/"
-            >
-              Home
-            </a>
-          </li>
-          <li>
-            <a
-              className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-sand px-16 sm:px-auto text-2xl"
+              className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-sand ml- px-14 sm:px-auto text-2xl hidden lg:flex"
               href="/Menu"
             >
-              Menu
+              Restaurant
+              <FontAwesomeIcon icon={faUtensils} size="xs" />
             </a>
           </li>
           <li>
             <a
-              className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-sand px-16 sm:px-auto text-2xl"
+              className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-sand px-14 sm:px-auto text-2xl hidden lg:flex"
               href="/Car"
             >
               Car Rental
+              <FontAwesomeIcon icon={faCar} size="xs" />
             </a>
           </li>
           <li>
             <a
-              className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-sand px-16 sm:px-auto text-2xl"
+              className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-sand px-14 sm:px-auto text-2xl hidden lg:flex"
               href="/rooms"
             >
               Rooms
+              <FontAwesomeIcon icon={faBed} size="xs" />
             </a>
           </li>
           <li>
             <a
-              className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-sand px-16 sm:px-auto text-2xl"
+              className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-sand px-14 sm:px-auto text-2xl hidden lg:flex"
               href="/admin"
             >
               Admin
+              <FontAwesomeIcon icon={faUsersCog} size="xs" />
             </a>
           </li>
           <li>{!isLoggedIn && <LogIn />}</li>
         </ul>
         {isLoggedIn && (
-          <div className="flex-none gap-2">
+          <div className="flex-none gap-2 ">
             <div className="dropdown dropdown-end">
               <div
                 tabIndex={0}
@@ -106,15 +133,12 @@ const Navbar = () => {
                 className="btn btn-ghost btn-circle avatar"
               >
                 <div className="rounded-full w-96">
-                  <Image
-                    alt="Tailwind CSS Navbar component"
-                    src={require("../myprofile/image/default.png")}
-                  />
+                  <FontAwesomeIcon className="h-9" icon={faUser} size="lg" />
                 </div>
               </div>
               <ul
                 tabIndex={0}
-                className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-primary-dark rounded-box w-52"
+                className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-primary rounded-box w-52"
               >
                 <li>
                   <a className="justify-between text-xl" href="/myprofile">
@@ -136,6 +160,47 @@ const Navbar = () => {
           </div>
         )}
       </div>
+      {showBurgerMenu && (
+        <ul className="menu menu-vertical lg:hidden bg-primary-dark">
+          <li>
+            <a
+              className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-sand  px-14 sm:px-auto text-2xl"
+              href="/Menu"
+            >
+              Restaurant
+              <FontAwesomeIcon icon={faUtensils} size="xs" />
+            </a>
+          </li>
+          <li>
+            <a
+              className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-sand px-14 sm:px-auto text-2xl"
+              href="/Car"
+            >
+              Car Rental
+              <FontAwesomeIcon icon={faCar} size="xs" />
+            </a>
+          </li>
+          <li>
+            <a
+              className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-sand px-14 sm:px-auto text-2xl"
+              href="/rooms"
+            >
+              Rooms
+              <FontAwesomeIcon icon={faBed} size="xs" />
+            </a>
+          </li>
+          <li>
+            <a
+              className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-sand px-14 sm:px-auto text-2xl"
+              href="/admin"
+            >
+              Admin
+              <FontAwesomeIcon icon={faUsersCog} size="xs" />
+            </a>
+          </li>
+          <li>{!isLoggedIn && <LogIn />}</li>
+        </ul>
+      )}
     </div>
   );
 };
