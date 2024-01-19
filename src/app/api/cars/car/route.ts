@@ -6,7 +6,7 @@ connect();
 
 export async function GET(request:NextRequest){
  try {
-   const car = await Car.find({}, "-_id");
+   const car = await Car.find({});
    return NextResponse.json({
    car
 })

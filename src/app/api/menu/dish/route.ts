@@ -6,7 +6,7 @@ connect();
 
 export async function GET(request:NextRequest){
  try {
-   const dish = await Menu.find({}, "-_id");
+   const dish = await Menu.find({});
    return NextResponse.json({
     dish
 })

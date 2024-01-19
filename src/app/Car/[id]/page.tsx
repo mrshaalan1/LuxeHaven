@@ -14,7 +14,7 @@ const { RangePicker } = DatePicker;
 
 export default function Page() {
   interface Car {
-    CarId: number;
+    _id: number;
     CarPicUrl: string;
     CarName: string;
     CarBrand: string;
@@ -37,8 +37,9 @@ export default function Page() {
     );
   };
   useEffect(() => {
+    console.log(id);
     fetch(`http://localhost:3000/api/cars/car/${id}`)
-      .then((response) => response.json())
+    .then((response) => response.json())
       .then((data) => {
         console.log(data);
 
@@ -69,7 +70,7 @@ export default function Page() {
     }
     axios
       .post("http://localhost:3000/api/reservation/new", {
-        car: cars.CarId,
+        car: cars._id,
         carRentalFrom: carRentalFrom,
         carRentalTo: carRentalTo,
         token: token,

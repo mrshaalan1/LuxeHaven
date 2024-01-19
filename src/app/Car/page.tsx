@@ -9,6 +9,7 @@ import Footer from "@/app/components/Footer";
 function Car() {
   interface CarObject {
     car: {
+      _id:number;
       CarId: number;
       CarPicUrl: string;
       CarName: string;
@@ -108,6 +109,7 @@ function Car() {
             })
             .map(
               ({
+                _id,
                 CarId,
                 CarPicUrl,
                 CarName,
@@ -117,7 +119,7 @@ function Car() {
               }) => (
                 <>
                   <div
-                    key={CarId}
+                    key={_id}
                     className="rounded-2xl overflow-hidden shadow-md m-5 p-3 relative"
                     style={{
                       backgroundColor: "#009688",
@@ -144,6 +146,8 @@ function Car() {
                     <div className="bg-primary text-sky text-xs uppercase font-bold rounded-full p-2 absolute bottom-24 right-5 mt-4 ml-1 shadow-md">
                       <span>${CarPrice}/Day</span>
                     </div>
+                    <Link className=" absolute right-3 bottom-3 p-3 bg-primary-dark rounded-3xl" href={"http://localhost:3000/Car/"+_id}> View</Link>
+
                   </div>
                 </>
               )

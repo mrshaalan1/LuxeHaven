@@ -1,8 +1,8 @@
-import mongoose from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
 
 const MenuSchema = new mongoose.Schema({
   RestaurantItemId: {
-    type: String,
+    type: Schema.Types.ObjectId,
   },
   RestaurantItemName: {
     type: String,

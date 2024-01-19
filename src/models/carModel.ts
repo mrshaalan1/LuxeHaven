@@ -1,11 +1,11 @@
 import { ICar } from "@/../libs/types";
-import mongoose, { Document } from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
 
 type CarDoc = Document & ICar;
 
 const CarSchema = new mongoose.Schema({
   CarId: {
-    type: Intl,
+    type: Schema.Types.ObjectId,
   },
   CarName: {
     type: String,

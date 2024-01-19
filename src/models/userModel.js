@@ -29,6 +29,10 @@ const userSchema = new mongoose.Schema({
       type: String,
       required: [false, "Please provide a phone number"],
   },
+  ProfilePicrute:{
+    type: String,
+    default: "/assets/profile/default.png"
+  },
     isVerfied: {
         type: Boolean,
         default: false,

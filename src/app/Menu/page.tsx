@@ -10,17 +10,33 @@ import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Swal from "sweetalert2";
 
-function Menu() {
-  interface DishObject {
-    dish: {
-      RestaurantItemId: number;
-      RestaurantItempPicUrl: string;
-      RestaurantItemName: string;
-      RestaurantItemIngredient: string;
-      RestaurantItemType: string;
-      RestaurantItemPrice: number;
-    }[];
+interface DishObject {
+  dish: {
+    _id:number;
+    RestaurantItemId: number;
+    RestaurantItempPicUrl: string;
+    RestaurantItemName: string;
+    RestaurantItemIngredient: string;
+    RestaurantItemType: string;
+    RestaurantItemPrice: number;
+  }[];
+}
+declare global {
+  interface Window {
+    clearCart: () => void;
   }
+}
+
+interface Item {
+  _id: number;
+  RestaurantItemName: string;
+  RestaurantItemPrice: number;
+  quantity?: number;
+}
+
+let swalInstance:any;
+
+function Menu() {
   const [cart, setCart] = useState<Item[]>([]);
   const [showCart, setShowCart] = useState(false);
   const [dishs, setDishs] = useState<DishObject | null>(null);
@@ -30,44 +46,99 @@ function Menu() {
   const [sort, setSort] = useState("");
   const [query, setQuery] = useState("");
 
-  interface Item {
-    RestaurantItemId: number;
-    RestaurantItemName: string;
-    RestaurantItemPrice: number;
-  }
+  const addToCart = (item: Item) => {
+    message.success(item.RestaurantItemName + " Was Added");
+    setCart((prevCart) => {
+      const itemExists = prevCart.find(
+        (cartItem) => cartItem._id === item._id
+      );
+      if (itemExists) {
+        return prevCart.map((cartItem) =>
+          cartItem._id === item._id
+            ? { ...cartItem, quantity: (cartItem.quantity || 0) + 1 }
+            : cartItem
+        );
+      } else {
+        return [...prevCart, { ...item, quantity: 1 }];
+      }
+    });
+  };
+
+  const clearCart = () => {
+    setCart([]);
+    if (swalInstance) {
+      swalInstance.close();
+      toggleCart();
+    }
+  };
+
+  window.clearCart = clearCart;
 
   const toggleCart = () => {
     setShowCart(!showCart);
-    let cartContent = "";
-    cart.forEach((item) => {
-      cartContent += `<p>${item.RestaurantItemName}: $${item.RestaurantItemPrice}</p>`;
-    });
-    const total = cart.reduce(
-      (accumulator, item) => accumulator + item.RestaurantItemPrice,
-      0
-    );
-    Swal.fire({
+
+    swalInstance = Swal.fire({
       title: "Your Order",
-      html: `${cartContent}<p>Total: $${total}</p>`,
+      html: generateCartContent(),
       icon: "info",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Confirm Order!",
-    }).then((result) => {
+      preConfirm: () => {
+        window.clearCart();
+      },
+      footer: '<button id="clearCartButton">Clear Cart</button>',
+      didOpen: () => {
+        const clearCartButton = document.getElementById("clearCartButton");
+        if (clearCartButton) {
+          clearCartButton.addEventListener("click", () => {
+            window.clearCart();
+            Swal.close();
+            message.success("Cart Cleared");
+          });
+        }
+      },
+    });
+
+    swalInstance.then((result:any) => {
       if (result.isConfirmed) {
+        let cartContent = "";
+        cart.forEach((item) => {
+          cartContent += `<p>${item.RestaurantItemName} X${
+            item.quantity ?? 1
+          }: $${(item.RestaurantItemPrice * (item.quantity ?? 1)).toFixed(
+            2
+          )}</p>`;
+        });
+        const total = cart.reduce(
+          (accumulator, item) =>
+            accumulator + item.RestaurantItemPrice * (item.quantity ?? 1),
+          0
+        );
+
         Swal.fire({
           title: "Ordered!",
-          text: "Items Ordered Successfully",
+          html: `${cartContent}<p>Total: $${total.toFixed(2)}</p>`,
           icon: "success",
         });
       }
     });
   };
 
-  const addToCart = (item: any) => {
-    message.success(item.RestaurantItemName + " Was Added");
-    setCart([...cart, item]);
+  const generateCartContent = () => {
+    let cartContent = "";
+    cart.forEach((item) => {
+      cartContent += `<p>${item.RestaurantItemName} X${item.quantity ?? 1}: $${(
+        item.RestaurantItemPrice * (item.quantity ?? 1)
+      ).toFixed(2)}</p>`;
+    });
+    const total = cart.reduce(
+      (accumulator, item) =>
+        accumulator + item.RestaurantItemPrice * (item.quantity ?? 1),
+      0
+    );
+    return `${cartContent}<p>Total: $${total.toFixed(2)}</p>`;
   };
 
   useEffect(() => {
@@ -141,10 +212,13 @@ function Menu() {
         </div>
         <FontAwesomeIcon
           onClick={toggleCart}
-          className="fixed bottom-10 right-12 z-50 bg-sand p-5 rounded-lg"
+          className="fixed bottom-10 right-12 z-40 bg-sand p-5 rounded-lg"
           icon={faShoppingCart}
           size="2xl"
         />
+        <div className="fixed badge badge-primary bottom-24 right-9 text-lg font-bold text-gray-200 z-50">
+          {cart.reduce((sum, item) => sum + (item.quantity || 0), 0)}
+        </div>
       </div>
       <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-1">
         {dishs &&
@@ -166,6 +240,7 @@ function Menu() {
             })
             .map(
               ({
+                _id,
                 RestaurantItemId,
                 RestaurantItempPicUrl,
                 RestaurantItemName,
@@ -175,7 +250,7 @@ function Menu() {
               }) => (
                 <>
                   <div
-                    key={RestaurantItemId}
+                    key={_id}
                     className=" rounded-2xl overflow-hidden shadow-xl m-5 p-3 relative"
                     style={{
                       backgroundColor: "#009688",
@@ -189,7 +264,7 @@ function Menu() {
                       width={500}
                       onClick={() =>
                         addToCart({
-                          RestaurantItemId,
+                          _id,
                           RestaurantItemName,
                           RestaurantItemPrice,
                         })
@@ -212,18 +287,8 @@ function Menu() {
               )
             )}
       </div>
-      {showCart && (
-        <div>
-          {cart.map((item, index) => (
-            <div key={index}>
-              <h2>{item.RestaurantItemName}</h2>
-              <p>${item.RestaurantItemPrice}</p>
-            </div>
-          ))}
-        </div>
-      )}
-      <div className="pb-24"></div>
-      <div>
+
+      <div className="pt-10">
         <Footer />
       </div>
     </div>

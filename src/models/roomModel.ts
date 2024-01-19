@@ -1,11 +1,11 @@
 import { IRoom } from "@/../libs/types";
-import mongoose, { Document } from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
 
 type RoomDoc = Document & IRoom;
 
 const RoomSchema = new mongoose.Schema({
   RoomId: {
-    type: Intl,
+    type: Schema.Types.ObjectId,
   },
   RoomType: {
     type: String,
