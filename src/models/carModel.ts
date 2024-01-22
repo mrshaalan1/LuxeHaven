@@ -13,7 +13,7 @@ const CarSchema = new mongoose.Schema({
   CarDescription: {
     type: String,
   },
-  CarPicUrl: {
+  CarPic: {
     type: String,
   },
   CarBrand: {

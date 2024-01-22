@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import LogIn from "./LogIn";
 
-
 const { Option } = Select;
 
 const formItemLayout = {
@@ -202,10 +201,12 @@ const Register: React.FC = () => {
           addonBefore={prefixSelector}
           style={{ width: "100%" }}
           id="phoneNumber"
+          pattern="\d*"
           value={user.PhoneNumber}
           onChange={(e) => setUser({ ...user, PhoneNumber: e.target.value })}
         />
       </Form.Item>
+
       <Form.Item {...tailFormItemLayout}>
         <Button
           onClick={onSignup}

@@ -3,8 +3,10 @@ import type { NextRequest } from 'next/server'
 import connect from "./dbConfig/dbConfig";
 import { NextApiRequest, NextApiResponse } from "next";
 import { NextHandler } from "next-connect";
- 
-export function middleware(request: NextRequest) {
+import jwt from 'jsonwebtoken';
+
+
+export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname
 
   const isPublicPath =  path === '/'
@@ -18,8 +20,9 @@ export function middleware(request: NextRequest) {
   if (!isPublicPath && !token) {
     return NextResponse.redirect(new URL('/', request.nextUrl))
   }
-    
+
 }
+
 const database = async (
   _0: NextApiRequest,
   _1: NextApiResponse,

@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
         required: [true, "Please provide a password"],
     },
     PhoneNumber: {
-      type: String,
+      type: Number,
       required: [false, "Please provide a phone number"],
   },
   ProfilePicrute:{
@@ -37,9 +37,9 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
-    isAdmin: {
-        type: Boolean,
-        default: false,
+    Role: {
+        type: String,
+        default: "USER",
     },
     forgotPasswordToken: String,
     forgotPasswordTokenExpiry: Date,

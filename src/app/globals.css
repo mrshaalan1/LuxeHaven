@@ -59,3 +59,7 @@ body {
  .info-details {
   height:550px;
  }
+
+ .ant-form-item-explain {
+  font-size: 20px !important;
+ }

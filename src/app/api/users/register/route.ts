@@ -3,7 +3,6 @@ import User from "@/models/userModel";
 import { NextRequest, NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
 import { sendEmail } from "@/helpers/mailer";
-import { log } from "console";
 
 
 connect();
@@ -20,7 +19,6 @@ export async function POST(request: NextRequest) {
 
     console.log(reqBody);
 
-    //check if user already exists
     const user = await User.findOne({ Email });
 
     if (user) {
@@ -41,6 +39,7 @@ export async function POST(request: NextRequest) {
       Password: hashedPassword,
       Username,
       PhoneNumber,
+      Role: "USER",
      });
           
      const savedUser = await newUser.save();

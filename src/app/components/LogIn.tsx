@@ -7,12 +7,9 @@ import { useRouter } from "next/navigation";
 
 import {
   Button,
-  Col,
-  DatePicker,
   Drawer,
   Form,
   Input,
-  Row,
   Checkbox,
   Space,
   message,
@@ -43,7 +40,7 @@ type FieldType = {
 
 const LogIn: React.FC = () => {
   const [open, setOpen] = useState(false);
-  const [isRegistering, setIsRegistering] = useState(false); // Add this line
+  const [isRegistering, setIsRegistering] = useState(false);
 
   const showDrawer = () => {
     setOpen(true);
@@ -55,6 +52,9 @@ const LogIn: React.FC = () => {
 
   const handleRegister = () => {
     setIsRegistering(true);
+  };
+  const handleCanleRegister = () => {
+    setIsRegistering(false);
   };
 
   const [user, setUser] = React.useState({
@@ -117,7 +117,14 @@ const LogIn: React.FC = () => {
         }
       >
         {isRegistering ? (
+          <>
           <Register />
+          <div className="flex mx-10">
+          <p className="text-black text-base">Already have an account? 	&nbsp;</p>
+          <button onClick={handleCanleRegister} className="text-blue-600 text-base"> Login</button>
+          </div>          
+          </>
+          
         ) : (
           <Form
             name="basic"
