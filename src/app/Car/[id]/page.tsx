@@ -9,24 +9,24 @@ import React, { useEffect, useState } from "react";
 import { DatePicker, Space, message } from "antd";
 import axios from "axios";
 import dayjs, { Dayjs } from "dayjs";
+import SkeletonDetail from "@/app/components/carDetailSkeleton";
 
 const { RangePicker } = DatePicker;
 
 export default function Page() {
   interface Car {
     _id: number;
-    CarPicUrl: string;
+    CarPic: string;
     CarName: string;
+    CarDescription: string;
     CarBrand: string;
     CarPrice: number;
-    CarDescription: string;
   }
-  
+
   const { id } = useParams();
   const [cars, setCars] = useState<Car | null>(null);
   const [carRentalFrom, setCarRentalFrom] = useState<Dayjs | null>(null);
   const [carRentalTo, setCarRentalTo] = useState<Dayjs | null>(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const disabledDate = (current: any) => {
@@ -39,12 +39,11 @@ export default function Page() {
   useEffect(() => {
     console.log(id);
     fetch(`http://localhost:3000/api/cars/car/${id}`)
-    .then((response) => response.json())
+      .then((response) => response.json())
       .then((data) => {
         console.log(data);
 
         setCars(data.car);
-        setLoading(false);
       })
       .catch((error) => {
         console.error(
@@ -52,11 +51,9 @@ export default function Page() {
           error
         );
         setError(error);
-        setLoading(false);
       });
   }, [id]);
 
-  if (loading) return "Loading...";
   if (error) return "An error occurred.";
   const onReserve = async () => {
     const token = localStorage.getItem("token");
@@ -99,7 +96,7 @@ export default function Page() {
   return (
     <div className="bg-sky">
       <Navbar />
-      {cars && (
+      {cars ? (
         <div>
           <div className="container mx-auto px-4 h-max mt-7 ">
             <p className="text-5xl text-center font-extrabold mb-4 text-primary-dark">
@@ -108,10 +105,10 @@ export default function Page() {
             </p>
           </div>
           <div className="grid md:grid-cols-2 gap-10">
-            <div className="bg-sand mt-5 xl:mx-10 relative">
+            <div className="bg-white mt-5 xl:mx-10 relative">
               <div className="overflow-hidden info-details">
                 <Image
-                  src={cars.CarPicUrl}
+                  src={"data:image/png;base64," + cars.CarPic}
                   alt={cars.CarName}
                   className="w-full object-cover rounded-lg"
                   height={500}
@@ -128,11 +125,16 @@ export default function Page() {
               </div>
             </div>
             <div className="md:pt-28 text-xl text-gray-700">
-              <p>{cars.CarDescription}</p>
-              <Space direction="vertical" size={12} className="pt-10">
+              <div>
+                <p className="font-bold text-2xl text-primary-dark pb-2 px-10">
+                  Car Descreption:
+                </p>
+                <p className="flex px-12">{cars.CarDescription}</p>
+              </div>
+              <Space direction="vertical" size={12} className="pt-10 mx-10">
                 <RangePicker
                   disabledDate={disabledDate}
-                  className="w-96 h-10 text-2xl"
+                  className="w-96 h-10 text-2xl "
                   onCalendarChange={(dates) => {
                     if (dates) {
                       setCarRentalFrom(dates[0]);
@@ -142,7 +144,7 @@ export default function Page() {
                 />{" "}
               </Space>
               <div className="pt-5">
-                <label htmlFor="Status" className="bg-gray-100 ">
+                <label htmlFor="Status" className="bg-gray-100 mx-10">
                   {" "}
                   Status: &nbsp;&nbsp;&nbsp;&nbsp;
                 </label>
@@ -150,8 +152,9 @@ export default function Page() {
             </div>
           </div>
         </div>
+      ) : (
+        <SkeletonDetail />
       )}
-
       <div className="p-11 w-full flex justify-between">
         <Link
           className="bg-red-700 text-sky text-s uppercase font-bold rounded-full p-2"

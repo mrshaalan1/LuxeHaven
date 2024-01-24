@@ -5,13 +5,13 @@ import Image from "next/image";
 import Link from "next/link";
 import Navbar from "../components/NavBar";
 import Footer from "@/app/components/Footer";
+import Skeleton from "@/app/components/carSkeleton";
 
 function Car() {
   interface CarObject {
     car: {
-      _id:number;
-      CarId: number;
-      CarPicUrl: string;
+      _id: number;
+      CarPic: string;
       CarName: string;
       CarDescription: string;
       CarBrand: string;
@@ -20,7 +20,7 @@ function Car() {
   }
 
   const [cars, setCars] = useState<CarObject | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [brands, setBrands] = useState<string[]>([]);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState("");
   const [sort, setSort] = useState("");
@@ -32,7 +32,10 @@ function Car() {
       .then((data) => {
         console.log(data);
         setCars(data);
-        setLoading(false);
+        const uniqueBrands = Array.from(
+          new Set(data.car.map((car: { CarBrand: string }) => car.CarBrand))
+        ) as string[];
+        setBrands(uniqueBrands);
       })
       .catch((error) => {
         console.error(
@@ -40,11 +43,9 @@ function Car() {
           error
         );
         setError(error);
-        setLoading(false);
       });
   }, []);
 
-  if (loading) return "Loading...";
   if (error) return "An error occurred.";
 
   return (
@@ -69,11 +70,11 @@ function Car() {
             <option disabled selected>
               Filter
             </option>
-            <option>BMW</option>
-            <option>whatsapp</option>
-            <option>test</option>
-            <option>batata</option>
+            {brands.map((brand, index) => (
+              <option key={index}>{brand}</option>
+            ))}
           </select>
+
           <select
             className="select select-bordered join-item text-gray-700 hover:bg-gray-300 bg-gray-200"
             onChange={(e) => setSort(e.target.value)}
@@ -96,62 +97,62 @@ function Car() {
         </div>
       </div>
       <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-1">
-        {cars &&
-          cars.car
-            .filter((car) => car.CarBrand === filter || filter === "")
-            .filter((car) =>
-              car.CarName.toLowerCase().includes(query.toLowerCase())
-            )
-            .sort((a, b) => {
-              if (sort === "asc") return a.CarPrice - b.CarPrice;
-              else if (sort === "desc") return b.CarPrice - a.CarPrice;
-              else return 0;
-            })
-            .map(
-              ({
-                _id,
-                CarId,
-                CarPicUrl,
-                CarName,
-                CarDescription,
-                CarBrand,
-                CarPrice,
-              }) => (
-                <>
-                  <div
-                    key={_id}
-                    className="rounded-2xl overflow-hidden shadow-md m-5 p-3 relative"
-                    style={{
-                      backgroundColor: "#009688",
-                    }}
-                  >
-                    <Image
-                      src={CarPicUrl}
-                      alt={CarName}
-                      className="w-full h-64 object-cover rounded-lg cursor-pointer"
-                      height={500}
-                      width={500}
-                    />
-
-                    <div className=" m-4">
-                      <span className=" font-bold">{CarName} </span>
-                      <span className=" block text-slate-700 text-sm">
-                        {CarDescription}{" "}
-                      </span>
-                    </div>
-
-                    <div className="bg-primary-dark text-sky text-xs uppercase font-bold rounded-full p-2 absolute top-0 mt-9 ml-1 shadow-md">
-                      <span>{CarBrand}</span>
-                    </div>
-                    <div className="bg-primary text-sky text-xs uppercase font-bold rounded-full p-2 absolute bottom-24 right-5 mt-4 ml-1 shadow-md">
-                      <span>${CarPrice}/Day</span>
-                    </div>
-                    <Link className=" absolute right-3 bottom-3 p-3 bg-primary-dark rounded-3xl" href={"http://localhost:3000/Car/"+_id}> View</Link>
-
-                  </div>
-                </>
+        {cars
+          ? cars.car
+              .filter((car) => car.CarBrand === filter || filter === "")
+              .filter((car) =>
+                car.CarName.toLowerCase().includes(query.toLowerCase())
               )
-            )}
+              .sort((a, b) => {
+                if (sort === "asc") return a.CarPrice - b.CarPrice;
+                else if (sort === "desc") return b.CarPrice - a.CarPrice;
+                else return 0;
+              })
+              .map(
+                ({
+                  _id,
+                  CarPic,
+                  CarName,
+                  CarDescription,
+                  CarBrand,
+                  CarPrice,
+                }) => (
+                  <>
+                    <div
+                      key={_id}
+                      className="rounded-2xl overflow-hidden shadow-md m-5 p-3 relative"
+                      style={{
+                        backgroundColor: "#02a696",
+                      }}
+                    >
+                      <Link href={"http://localhost:3000/Car/" + _id}>
+                        <Image
+                          src={"data:image/png;base64," + CarPic}
+                          alt={CarName}
+                          className="w-full h-64 object-cover rounded-lg cursor-pointer"
+                          height={500}
+                          width={500}
+                        />
+                      </Link>
+
+                      <div className=" m-4">
+                        <span className=" font-bold">{CarName} </span>
+                        <span className=" block text-slate-700 text-sm">
+                          {CarDescription}{" "}
+                        </span>
+                      </div>
+
+                      <div className="bg-primary-dark text-sky text-xs uppercase font-bold rounded-full p-2 absolute top-0 mt-9 ml-1 shadow-md">
+                        <span>{CarBrand}</span>
+                      </div>
+                      <div className="bg-primary text-sky text-xs uppercase font-bold rounded-full p-2 absolute bottom-24 right-5 mt-4 ml-1 shadow-md">
+                        <span>${CarPrice}/Day</span>
+                      </div>
+                    </div>
+                  </>
+                )
+              )
+          : Array.from({ length: 5 }).map((_, idx) => <Skeleton key={idx} />)}
       </div>
       <div className="pb-24"></div>
       <div>

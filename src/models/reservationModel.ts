@@ -11,7 +11,7 @@ const ReservationSchema = new mongoose.Schema({
   spa: Boolean,
   gym: Boolean,
   carReservation: {
-    CarId: Number,
+    CarId: {type: Schema.Types.ObjectId, ref: "Car" },
     CarRentalFrom: Date,
     CarRentalTo: Date,
   },

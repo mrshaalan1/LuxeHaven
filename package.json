@@ -41,11 +41,13 @@
     "react-query": "^3.39.3",
     "react-responsive": "^9.0.2",
     "react-responsive-carousel": "^3.2.23",
+    "react-simple-typewriter": "^5.0.1",
     "reflect-metadata": "^0.2.1",
     "sequelize": "^6.35.2",
     "sweetalert2": "^11.6.13",
     "swiper": "^11.0.5",
-    "typeorm": "^0.3.17"
+    "typeorm": "^0.3.17",
+    "typewriter-effect": "^2.21.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

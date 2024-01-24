@@ -74,7 +74,7 @@ const Navbar = () => {
           </a>
         </div>
         <div
-          className="burger-menu cursor-pointer lg:hidden"
+          className="burger-menu cursor-pointer lg:hidden "
           onClick={toggleBurgerMenu}
         >
           <div className={`bar ${showBurgerMenu ? "active" : ""}`}></div>
@@ -88,7 +88,7 @@ const Navbar = () => {
         >
           <li>
             <a
-              className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-sand ml- px-14 sm:px-auto text-2xl hidden lg:flex"
+              className="btn-ghost font-bold hover:text-sand px-14 sm:px-auto text-2xl hidden lg:flex"
               href="/Menu"
             >
               Restaurant
@@ -97,16 +97,16 @@ const Navbar = () => {
           </li>
           <li>
             <a
-              className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-sand px-14 sm:px-auto text-2xl hidden lg:flex"
+              className="btn-ghost font-bold hover:text-sand px-14 sm:px-auto text-2xl hidden lg:flex"
               href="/Car"
             >
-              Car Rental
+              CarRental
               <FontAwesomeIcon icon={faCar} size="xs" />
             </a>
           </li>
           <li>
             <a
-              className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-sand px-14 sm:px-auto text-2xl hidden lg:flex"
+              className="btn-ghost font-bold hover:text-sand px-14 sm:px-auto text-2xl hidden lg:flex"
               href="/rooms"
             >
               Rooms
@@ -115,11 +115,11 @@ const Navbar = () => {
           </li>
           <li>
             <a
-              className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-sand px-14 sm:px-auto text-2xl hidden lg:flex"
+              className="btn-ghost font-bold hover:text-sand px-14 sm:px-auto text-2xl hidden lg:flex"
               href="/admin"
             >
               Admin
-              <FontAwesomeIcon icon={faUsersCog} size="xs" />
+              <FontAwesomeIcon icon={faUsersCog}  />
             </a>
           </li>
           <li>{!isLoggedIn && <LogIn />}</li>
@@ -132,8 +132,8 @@ const Navbar = () => {
                 role="button"
                 className="btn btn-ghost btn-circle avatar"
               >
-                <div className="rounded-full w-96">
-                  <FontAwesomeIcon className="h-9" icon={faUser} size="lg" />
+                <div className=" w-full">
+                  <FontAwesomeIcon className="h-9" icon={faUser} size="lg"  />
                 </div>
               </div>
               <ul

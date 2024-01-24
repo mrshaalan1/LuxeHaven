@@ -63,7 +63,6 @@ export async function POST(request: NextRequest) {
     // Check if user already has any car reservation
     const existingCarReservation = await Reservation.findOne({
       customer: userId,
-      CarId: { $ne: null },
     });
 
     if (existingCarReservation && !hasRoomReservation) {
@@ -95,24 +94,8 @@ export async function POST(request: NextRequest) {
     if (roomType && !room) {
       return NextResponse.json({ message: "Room not found" }, { status: 404 });
     }
-
-    const reservation = new Reservation({
-      customer: userId,
-      RoomId: RoomId,
-      reservationFrom: checkInDate,
-      reservationTo: checkOutDate,
-      spa: spa,
-      gym: gym,
-      carReservation: {
-        CarId: car,
-        CarRentalFrom: carRentalFrom,
-        CarRentalTo: carRentalTo,
-      },
-    });
-
     try {
       if (existingRoomReservation) {
-        // Update only the car reservation part of the existing room reservation
         existingRoomReservation.carReservation = {
           CarId: car,
           CarRentalFrom: carRentalFrom,

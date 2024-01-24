@@ -6,15 +6,23 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { Checkbox, Button, Form, Input, Upload, message, Select } from "antd";
+import Image from "next/image";
 
 import type { UploadChangeParam } from "antd/es/upload";
 import type { RcFile, UploadFile, UploadProps } from "antd/es/upload/interface";
+import Swal from "sweetalert2";
 
 const { Option } = Select;
 
 const getBase64 = (img: RcFile, callback: (url: string) => void) => {
   const reader = new FileReader();
-  reader.addEventListener("load", () => callback(reader.result as string));
+  reader.addEventListener("load", () => {
+    if (typeof reader.result === "string") {
+      callback(reader.result.replace("data:", "").replace(/^.+,/, ""));
+    } else {
+      callback("");
+    }
+  });
   reader.readAsDataURL(img);
 };
 
@@ -31,19 +39,25 @@ const beforeUpload = (file: RcFile) => {
 };
 
 export default function myprofile() {
+  const [data, setData] = useState<UserData | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [imageUrl, setImageUrl] = useState<string>();
+
   interface UserData {
     FirstName?: string;
     LastName?: string;
     PhoneNumber?: string;
+    ProfilePicrute?: string;
   }
   useEffect(() => {
     getUserDetails();
   }, []);
-  
-  const [data, setData] = useState<UserData | null>(null);
 
-  const [loading, setLoading] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string>();
+  useEffect(() => {
+    if (data?.ProfilePicrute) {
+      setImageUrl(`data:image/png;base64,${data.ProfilePicrute.split(",")[1]}`);
+    }
+  }, [data]);
 
   const getUserDetails = async () => {
     const res = await axios.get("/api/users/me");
@@ -75,13 +89,23 @@ export default function myprofile() {
         profilepic: imageUrl,
       });
       console.log(res);
-
-      console.log(res.data);
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Profile Updated Successfully",
+        showConfirmButton: false,
+        timer: 1500
+      });
+      
     } catch (err) {
       console.error(err);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Error Occured",
+      });
     }
   };
-
   const uploadButton = (
     <div>
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
@@ -99,6 +123,9 @@ export default function myprofile() {
     <div className="bg-sky">
       <Navbar />
 
+      <div className="rounded-lg">
+        
+      </div>
       <div className=" text-xl lg:pt-10 min-h-screen">
         <div className="bg-primary flex flex-col items-center lg:w-2/3 mx-auto lg:pt-10 lg:rounded-2xl">
           <Form
@@ -111,7 +138,10 @@ export default function myprofile() {
               name="avatar"
               className="flex justify-center items-center"
             >
-              <label className="text-3xl flex justify-center items-center text-zinc-100" style={{fontSize: 30}}>
+              <label
+                className="text-3xl flex justify-center items-center text-zinc-100"
+                style={{ fontSize: 30 }}
+              >
                 Profile Picture
               </label>
               <Upload
@@ -125,7 +155,7 @@ export default function myprofile() {
               >
                 {imageUrl ? (
                   <img
-                    src={imageUrl}
+                    src={`data:image/png;base64,${imageUrl}`}
                     alt="avatar"
                     style={{
                       width: "100%",
@@ -140,7 +170,12 @@ export default function myprofile() {
             </Form.Item>
             <Form.Item name="FirstName" className="flex flex-col">
               <div className="flex flex-col">
-                <label className="text-3xl text-zinc-100" style={{fontSize: 26}}>First Name</label>
+                <label
+                  className="text-3xl text-zinc-100"
+                  style={{ fontSize: 26 }}
+                >
+                  First Name
+                </label>
 
                 <Input
                   className="text-xl"
@@ -158,7 +193,12 @@ export default function myprofile() {
 
             <Form.Item name="LastName">
               <div className="flex flex-col">
-                <label className="text-3xl text-zinc-100" style={{fontSize: 26}}>Last Name</label>
+                <label
+                  className="text-3xl text-zinc-100"
+                  style={{ fontSize: 26 }}
+                >
+                  Last Name
+                </label>
                 <Input
                   className="text-xl"
                   value={data?.LastName}
@@ -184,7 +224,12 @@ export default function myprofile() {
               hasFeedback
             >
               <div className="flex flex-col">
-                <label className="text-3xl text-zinc-100" style={{fontSize: 26}}>Old Password</label>
+                <label
+                  className="text-3xl text-zinc-100"
+                  style={{ fontSize: 26 }}
+                >
+                  Old Password
+                </label>
                 <Input.Password className="text-xl" />
               </div>
             </Form.Item>
@@ -195,13 +240,17 @@ export default function myprofile() {
                   message: "Please input your new password!",
                   min: 8,
                 },
-                
               ]}
-              style={{fontSize: 40}}
+              style={{ fontSize: 40 }}
               hasFeedback
             >
               <div className="flex flex-col">
-                <label className="text-3xl text-zinc-100" style={{fontSize: 26}}>New Password</label>
+                <label
+                  className="text-3xl text-zinc-100"
+                  style={{ fontSize: 26 }}
+                >
+                  New Password
+                </label>
                 <Input.Password className="text-xl" />
               </div>
             </Form.Item>
@@ -228,10 +277,10 @@ export default function myprofile() {
                   },
                 }),
               ]}
-              style={{fontSize: 40}}
+              style={{ fontSize: 40 }}
             >
               <div className="flex flex-col">
-                <label className="text-zinc-100" style={{fontSize: 26}}>
+                <label className="text-zinc-100" style={{ fontSize: 26 }}>
                   Confirm Password
                 </label>
                 <Input.Password className="text-xl" />
@@ -242,7 +291,9 @@ export default function myprofile() {
               rules={[{ message: "Please input your phone number!" }]}
             >
               <div className="flex flex-col">
-                <label className="text-zinc-100" style={{fontSize: 26}}>Phone Number</label>
+                <label className="text-zinc-100" style={{ fontSize: 26 }}>
+                  Phone Number
+                </label>
                 <Input
                   className="text-2xl text-zinc-100"
                   addonBefore={prefixSelector}
@@ -251,7 +302,6 @@ export default function myprofile() {
                   onChange={(event) =>
                     setData({ ...data, PhoneNumber: event.target.value })
                   }
-                  
                 />
               </div>
             </Form.Item>
@@ -260,7 +310,7 @@ export default function myprofile() {
                 type="primary"
                 htmlType="submit"
                 className="bg-green-500 text-lg px-5 pb-7"
-                style={{fontSize: 28}}
+                style={{ fontSize: 28 }}
               >
                 Confirm
               </Button>

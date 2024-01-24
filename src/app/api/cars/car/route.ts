@@ -7,6 +7,8 @@ connect();
 export async function GET(request:NextRequest){
  try {
    const car = await Car.find({});
+   //console.log(car);
+   
    return NextResponse.json({
    car
 })

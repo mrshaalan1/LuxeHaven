@@ -1,26 +1,38 @@
+"use client";
 import React from "react";
 import Image from "next/image";
 import Navbar from "./components/NavBar";
 import Footer from "@/app/components/Footer";
+import { useTypewriter, Cursor } from "react-simple-typewriter";
 
 // import Video from 'next-video'
 // import home from '../../../videos/home.mp4'
 
 export default function Home() {
+  const [text, { isDelete }] = useTypewriter({
+    words: [
+      "Discover Serenity at LuxeHaven. Where Luxury Meets Nature, and Every Moment Is a MASTERPIECE.",
+    ],
+    typeSpeed: 50,
+    delaySpeed: 100,
+  });
+
   return (
     <main>
       <div className="Home bg-sky">
         <Navbar />
         <div className="flex">
-          {/*------------------------------------------------------------------------------------------------------------------*/}
-
-          {/* video to be addedd */}
-          {/* <video className=" min-w-full min-h-screen object-cover rounded-lg" autoPlay="{true}" muted loop="{true}">
-          <Video src={require("./images/home/home.mp4")} type="video/mp4" className=" aspect-auto" alt="promo"/> 
-        </video> */}
-
-          {/*------------------------------------------------------------------------------------------------------------------*/}
+          <img
+            src="/assets/main/Landing.png"
+            alt="Landing"
+            className="w-full "
+          />
+          <div className="absolute  lg:top-1/2 md:top-96 xs:top-72 left-1/2 transform -translate-x-3/4 -translate-y-1/2">
+            <span className="typewriter-text font-extrabold lg:text-4xl md:text-3xl sm:text-2xl xs:text-lg text-zinc-100">{text}</span>
+            {!isDelete && <Cursor />}
+          </div>
         </div>
+
         <ul className="p-12 grid grid-cols-4 md:gap-14">
           <li className="lg:col-span-3 xs:col-span-4">
             <p className="font-sans font-extrabold text-3xl text-primary-dark ">
