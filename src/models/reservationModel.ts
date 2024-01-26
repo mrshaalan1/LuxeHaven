@@ -5,7 +5,7 @@ type ReservationDoc = Document & IReservation;
 
 const ReservationSchema = new mongoose.Schema({
   customer: { type: Schema.Types.ObjectId, ref: "User", require: true },
-  RoomId: { type: Number, ref: "Room", require: true },
+  RoomId: { type: Schema.Types.ObjectId, ref: "Room", require: true },
   reservationFrom: { type: Date, require: true },
   reservationTo: { type: Date, require: true },
   spa: Boolean,

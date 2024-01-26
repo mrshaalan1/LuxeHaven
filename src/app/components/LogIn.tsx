@@ -112,7 +112,7 @@ const LogIn: React.FC = () => {
         }}
         extra={
           <Space>
-            <Button onClick={onClose}>Cancel</Button>
+            <button onClick={onClose} className="shadow-sm text-black rounded-md border-black p-2 hover:bg-red-600 hover:text-white">Cancel</button>
           </Space>
         }
       >
@@ -121,7 +121,7 @@ const LogIn: React.FC = () => {
           <Register />
           <div className="flex mx-10">
           <p className="text-black text-base">Already have an account? 	&nbsp;</p>
-          <button onClick={handleCanleRegister} className="text-blue-600 text-base"> Login</button>
+          <button onClick={handleCanleRegister} className="text-blue-600 text-xl"> Login</button>
           </div>          
           </>
           
@@ -145,8 +145,9 @@ const LogIn: React.FC = () => {
               <Input
                 value={user.Email}
                 onChange={(e) => setUser({ ...user, Email: e.target.value })}
+                className="text-xl"
               />
-            </Form.Item>
+            </Form.Item >
 
             <Form.Item<FieldType>
               label="Password"
@@ -157,10 +158,13 @@ const LogIn: React.FC = () => {
                   message: "Please input your password!",
                 },
               ]}
+              style={{fontSize:10}}
+              className="text-xl"
             >
               <Input.Password
                 value={user.Password}
                 onChange={(e) => setUser({ ...user, Password: e.target.value })}
+                className="text-xl"
               />
             </Form.Item>
 

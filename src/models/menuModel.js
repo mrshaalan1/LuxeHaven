@@ -7,9 +7,6 @@ const MenuSchema = new mongoose.Schema({
   RestaurantItemName: {
     type: String,
   },
-  RestaurantItemDescription: {
-    type: String,
-  },
   RestaurantItemIngredient:{
     type: String,
   },
@@ -19,7 +16,7 @@ const MenuSchema = new mongoose.Schema({
   RestaurantItemPrice: {
     type: Number,
   },
-  RestaurantItempPicUrl: {
+  RestaurantItempPic: {
     type: String,
   },
 });

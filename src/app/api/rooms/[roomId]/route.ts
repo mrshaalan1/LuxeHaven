@@ -8,7 +8,7 @@ connect();
 export async function GET(request: NextRequest) {
  try {
   const RoomId = Number(request.nextUrl.pathname.split('/').pop()) || undefined;
-   const room = await Room.findOne({RoomId : RoomId}, "RoomPicUrl RoomType RoomNumber -_id");
+   const room = await Room.findOne({RoomId : RoomId}, "RoomPicUrl RoomType RoomNumber");
  
  return NextResponse.json({
    room

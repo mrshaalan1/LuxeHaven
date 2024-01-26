@@ -1,4 +1,3 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import { NextRequest, NextResponse } from "next/server";
 import Car from "../../../../../models/carModel";
 import connect from "@/dbConfig/dbConfig";
@@ -16,7 +15,6 @@ export async function POST(request: NextRequest) {
       CarPrice,
       CarPic,
     });
-    //console.log(reqBody);
     
     await newCar.save();
     return (NextResponse.json({

@@ -28,119 +28,114 @@ export default function Home() {
             className="w-full "
           />
           <div className="absolute  lg:top-1/2 md:top-96 xs:top-72 left-1/2 transform -translate-x-3/4 -translate-y-1/2">
-            <span className="typewriter-text font-extrabold lg:text-4xl md:text-3xl sm:text-2xl xs:text-lg text-zinc-100">{text}</span>
+            <span className="typewriter-text font-extrabold lg:text-4xl md:text-3xl sm:text-2xl xs:text-lg text-zinc-100">
+              {text}
+            </span>
             {!isDelete && <Cursor />}
           </div>
         </div>
 
         <ul className="p-12 grid grid-cols-4 md:gap-14">
-          <li className="lg:col-span-3 xs:col-span-4">
-            <p className="font-sans font-extrabold text-3xl text-primary-dark ">
+          <li className="lg:col-span-2 xs:col-span-4">
+            <p
+              className="font-sans font-extrabold text-3xl
+             text-primary-dark "
+            >
               Find Your Relaxation
             </p>
             <br />
-            <p className="p-2 font-sans font-normal text-lg text-gray-800">
+            <p className="p-2 font-sans font-semibold text-xl text-gray-800">
               {" "}
-              &nbsp; Your phone and laptop aren’t the only things that need
-              recharging. When’s the last time you escaped for a long weekend
-              tripor better yet, for a week-long vacation in Beirut? Take full
-              advantage of your surroundings by enjoying the health benefits
-              that come with an alluring atmosphere. Here are a few of the many
-              health benefits of being outdoors and enjoying a relaxing week or
-              weekend.
+              &nbsp; A Symphony of Luxury and Exploration. Immerse yourself in
+              opulence, indulge in exquisite culinary journeys, and explore with
+              ease. Your haven of extraordinary experiences awaits.
             </p>
           </li>
-          <li className=" lg:col-span-1 col-span-4 md:col-start-2 xs:col-start-1">
+          <li className=" lg:col-span-2 col-span-4 md:col-start-2 xs:col-start-1">
             <Image
-              className="h-56 w-full object-cover"
-              src={require("./images/home/relaxing.png")}
+              className="h-80 w-full object-cover shadow-lg rounded-xl"
+              src={require("./images/home/Relaxing.png")}
               alt="relaxing"
             />
           </li>
 
-          <li className="lg:col-span-3 xs:col-span-4">
-            <p className="font-sans font-extrabold text-3xl text-primary-dark ">
-              IT STRENGTHENS YOUR IMMUNE SYSTEM
-            </p>
-            <br />
-            <p className="p-2 font-sans font-normal text-lg text-gray-800">
-              {" "}
-              &nbsp; Breathing the fresh air–away from the city, out in nature
-              and the open air–can be one of the healthiest things you can do.
-              Those deep breaths of fresh air you can take can help your immune
-              system reset and increase so you can fight off colds and bugs.
-            </p>
-          </li>
-          <li className=" lg:col-span-1 col-span-4 md:col-start-2 xs:col-start-1">
+          <li className=" lg:col-span-2 col-span-4 md:col-start-2 xs:col-start-1">
             <Image
-              className="h-56 lg:w-96 xs:w-full object-cover"
-              src={require("./images/home/breathing.png")}
+              className="h-96 object-center w-full object-cover shadow-lg rounded-xl"
+              src={require("./images/home/Room.png")}
               alt="breathing"
             />
           </li>
-
-          <li className="lg:col-span-3 xs:col-span-4">
-            <p className="font-sans font-extrabold text-3xl text-primary-dark ">
-              IT CAN LOWER YOUR BLOOD PRESSURE
+          <li className="lg:col-span-2 xs:col-span-4">
+            <p className="font-sans font-extrabold text-3xl text-primary-dark capitalize">
+              Hospitality and Rooms:
             </p>
             <br />
-            <p className="p-2 font-sans font-normal text-lg text-gray-800">
+            <p className="p-2 font-sans font-semibold text-xl text-gray-800">
               {" "}
-              &nbsp;Doctors say fresh air helps with many health challenges
-              people face, like high blood pressure and heart rates. By spending
-              times outdoors, you may see your blood pressure and heart rate
-              decrease.
+              &nbsp; At LuxeHaven, our commitment goes beyond accommodation;
+              it's a promise of unparalleled hospitality. Each room is a
+              sanctuary of luxury, meticulously designed to elevate your stay
+              into an unforgettable experience. Your journey with us is more
+              than a visit; it's a personalized retreat.
             </p>
           </li>
-          <li className=" lg:col-span-1 col-span-4 md:col-start-2 xs:col-start-1">
+
+          <li className="lg:col-span-2 xs:col-span-4">
+            <p className="font-sans font-extrabold text-3xl text-primary-dark capitalize">
+              Car Rental Services
+            </p>
+            <br />
+            <p className="p-2 font-sans font-semibold text-xl text-gray-800">
+              {" "}
+              &nbsp; Seamless Exploration Awaits! Unlock the freedom to roam at
+              your pace with LuxeHaven's exclusive car rental services. From
+              city exploration to scenic drives, our fleet ensures every journey
+              is as remarkable as your stay. Drive into luxury and discover the
+              world on your terms.
+            </p>
+          </li>
+          <li className=" lg:col-span-2 col-span-4 md:col-start-2 xs:col-start-1">
             <Image
-              className="h-56 lg:w-96 xs:w-full object-cover"
-              src={require("./images/home/blood.png")}
+              className="h-72 w-full object-cover shadow-lg rounded-xl"
+              src={require("./images/home/car.png")}
               alt="blood"
             />
           </li>
-
-          <li className="lg:col-span-3 xs:col-span-4">
-            <p className="font-sans font-extrabold text-3xl text-primary-dark ">
-              ALLOWS YOUR BODY TO HEAL AND RECOVER
-            </p>
-            <br />
-            <p className="p-2 font-sans font-normal text-lg text-gray-800">
-              {" "}
-              &nbsp; When you rest, your body can recover and heal. Your muscles
-              can repair themselves from daily wear and tear or more severe
-              injuries from sports or other activities. Stepping outside of your
-              daily routine and participating in activities that may not be your
-              daily norm may be just what you need.
-            </p>
-          </li>
-          <li className=" lg:col-span-1 col-span-4 md:col-start-2 xs:col-start-1">
+          <li className=" lg:col-span-2 col-span-4 md:col-start-2 xs:col-start-1">
             <Image
-              className="h-56 lg:w-96 xs:w-full object-cover"
-              src={require("./images/home/heal.png")}
+              className="max-h-72 w-full object-cover shadow-lg rounded-xl"
+              src={require("./images/home/menu.png")}
               alt="heal"
             />
           </li>
-
-          <li className="lg:col-span-3 xs:col-span-4">
-            <p className="font-sans font-extrabold text-3xl text-primary-dark ">
-              RECHARGES YOUR BRAIN
+          <li className="lg:col-span-2 xs:col-span-4">
+            <p className="font-sans font-extrabold text-3xl text-primary-dark capitalize">
+              Gourmet Menu Offerings
             </p>
             <br />
-            <p className="p-2 font-sans font-normal text-lg text-gray-800">
+            <p className="p-2 font-sans font-semibold text-xl text-gray-800">
               {" "}
-              &nbsp; It’s easy for the everyday hustle-and-bustle to stack up
-              to-do lists and never-ending thoughts. Utilize your resting time
-              to meditate and allow your thoughts to pass by. Meditation is one
-              of the leading methods used to relieve stress. Your brain can
-              recharge as you take time to rest and relax–and this helps improve
-              your memory and ability to learn.
+              &nbsp; Savor Culinary Excellence at LuxeHaven. Our menu is a
+              gastronomic journey, curated to delight your palate with exquisite
+              flavors. From local delicacies to international cuisines, our
+              chefs ensure every dish is a celebration of taste. Indulge in a
+              symphony of flavors at LuxeHaven.
             </p>
           </li>
-          <li className=" lg:col-span-1 col-span-4 md:col-start-2 xs:col-start-1">
+
+          <div className="flex items-center justify-center lg:col-span-2 xs:col-span-4 border-b-8 border-primary">
+            <li>
+              <p className="font-sans font-extrabold text-4xl text-primary capitalize">
+                your room is this way ▸
+              </p>
+            </li>
+          </div>
+
+          <li className=" lg:col-span-2 col-span-4 md:col-start-2 xs:col-start-1">
             <Image
-              className="h-56 lg:w-96 xs:w-full object-cover"
-              src={require("./images/home/brain.png")}
+              className="h-80 w-full object-cover shadow-lg rounded-xl"
+              src={require("./images/home/this way.png")}
               alt="brain"
             />
           </li>

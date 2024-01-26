@@ -13,7 +13,7 @@ const RoomSchema = new mongoose.Schema({
   RoomDescription: {
     type: String,
   },
-  RoomPicUrl: {
+  RoomPic: {
     type: String,
   },
   RoomNumber: {
@@ -21,9 +21,6 @@ const RoomSchema = new mongoose.Schema({
   },
   RoomPrice: {
     type: Intl,
-  },
-  RoomRating: {
-    type:Intl,
   },
 });
 

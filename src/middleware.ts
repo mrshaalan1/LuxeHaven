@@ -22,6 +22,13 @@ export async function middleware(request: NextRequest) {
   }
 
 }
+export const config = {
+  matcher: [
+    '/admin',
+    '/myprofile',
+    '/myreservations',
+  ]
+}
 
 const database = async (
   _0: NextApiRequest,
@@ -38,10 +45,3 @@ const database = async (
 
 export default database;
  
-export const config = {
-  matcher: [
-    '/admin',
-    '/myprofile',
-    '/myreservations',
-  ]
-}

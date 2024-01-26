@@ -2,30 +2,22 @@ import connect from "@/dbConfig/dbConfig";
 import User from "@/models/userModel";
 import Reservation from "@/models/reservationModel";
 import { NextRequest, NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
+import { getDataFromToken } from "@/helpers/getDataFromToken";
 
 connect();
 
-export async function POST(request: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
-    const reqBody = await request.json();
-    const { token } = reqBody;
+    const userId = await getDataFromToken(request);
 
-    const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET!);
-
-    if (typeof decodedToken !== "string") {
       const userReservations = await Reservation.find({
-        customer: decodedToken.id,
+        customer: userId,
       });
       return NextResponse.json(
         { reservations: userReservations },
         { status: 200 }
       );
-    } else {
-      console.log("Invalid token");
-      return NextResponse.json({ message: "Invalid Token" }, { status: 401 });
-    }
-  } catch (error: any) {
+    } catch (error: any) {
     console.error("Error:", error);
     return NextResponse.json({ message: error }, { status: 500 });
   }

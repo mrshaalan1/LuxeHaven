@@ -122,7 +122,7 @@ const Navbar = () => {
               <FontAwesomeIcon icon={faUsersCog}  />
             </a>
           </li>
-          <li>{!isLoggedIn && <LogIn />}</li>
+          <li className="hidden lg:flex">{!isLoggedIn && <LogIn />}</li>
         </ul>
         {isLoggedIn && (
           <div className="flex-none gap-2 ">
@@ -161,7 +161,7 @@ const Navbar = () => {
         )}
       </div>
       {showBurgerMenu && (
-        <ul className="menu menu-vertical lg:hidden bg-primary-dark">
+        <ul className="menu menu-vertical lg:hidden bg-primary-dark z-50">
           <li>
             <a
               className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-sand  px-14 sm:px-auto text-2xl"

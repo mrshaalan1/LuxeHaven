@@ -23,7 +23,7 @@ const config: Config = {
       },
       colors: {
         'primary' : "#3F51B5",
-        'secendary' : "#009688",
+        'secendary' : "#02a696",
         'sand' : "#FFC107",
         'sky' : "#C5CAE9",
         'water': "#2F78CB",

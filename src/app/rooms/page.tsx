@@ -5,22 +5,20 @@ import Image from "next/image";
 import Link from "next/link";
 import Navbar from "../components/NavBar";
 import Footer from "@/app/components/Footer";
-import { Rate } from "antd";
+import Skeleton from "@/app/components/Skeleton";
 
 function Room() {
   interface RoomObject {
     room: {
       RoomId: number;
-      RoomPicUrl: string;
+      RoomPic: string;
       RoomType: string;
       RoomDescription: string;
       RoomPrice: number;
-      RoomRating: number;
     }[];
   }
 
   const [rooms, setRooms] = useState<RoomObject | null>(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -29,7 +27,6 @@ function Room() {
       .then((data) => {
         console.log(data);
         setRooms(data);
-        setLoading(false);
       })
       .catch((error) => {
         console.error(
@@ -37,11 +34,9 @@ function Room() {
           error
         );
         setError(error);
-        setLoading(false);
       });
   }, []);
 
-  if (loading) return "Loading...";
   if (error) return "An error occurred.";
 
   return (
@@ -54,35 +49,33 @@ function Room() {
           Rooms
         </h1>
       </div>
-      <div className="grid md:grid-cols-2 gap-1">
-        {rooms &&
-          rooms.room.map(({RoomId,RoomType,RoomPicUrl,RoomRating }) => (
-            <>
-              <div key={RoomId} className="room-details lg:bg-sand md:bg-primary xs:bg-sand rounded overflow-hidden shadow-md m-5 p-8 relative">
-                <Image
-                  src={RoomPicUrl}
-                  alt={RoomType}
-                  className="w-full h-72 object-cover rounded-lg"
-                  height={500}
-                  width={500}
-                />
-                <div className="rounded-full p-2 absolute top-0 mt-9 right-10 bg-primary">
-                  <Rate disabled allowHalf defaultValue={RoomRating} />
-                </div>
-                <div>
-                  <Link
-                    className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-primary-dark hover:bg-sky rounded-full bg-primary absolute  bottom-4 right-4"
-                    href="/Reserve"
-                  >
-                    View
+      <div className="bg-primary-dark h-3/4 w-full absolute top-[33%] "></div>
+      <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-1">
+        {rooms
+          ? rooms.room.map(({ RoomId, RoomType, RoomPic }) => (
+              <>
+                <div
+                  key={RoomId}
+                  className="room-details rounded hover:bg-water overflow-hidden m-5 p-2 relative"
+                >
+                  <Link href="/Reserve">
+                    <Image
+                      src={"data:image/png;base64," + RoomPic}
+                      alt={RoomType}
+                      className="w-full h-72 object-cover rounded-lg"
+                      height={500}
+                      width={500}
+                    />
                   </Link>
+
+                  <div></div>
+                  <div className="bg-primary text-zinc-200 text-lg uppercase font-bold  p-2 shadow-md text-center border-b-8 border-sand">
+                    <span>{RoomType}</span>
+                  </div>
                 </div>
-                <div className="bg-primary-dark text-sky text-xs uppercase font-bold rounded-full p-2 absolute top-0 mt-9 ml-1 shadow-md">
-                  <span>{RoomType}</span>
-                </div>
-              </div>
-            </>
-          ))}
+              </>
+            ))
+          : Array.from({ length: 4 }).map((_, idx) => <Skeleton key={idx} />)}
       </div>
       <div className="pb-24"></div>
       <div>

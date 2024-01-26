@@ -29,7 +29,7 @@ export default function admin() {
     window.location.href = "/";
   }
 
-  const [currentView, setCurrentView] = useState("Car");
+  const [currentView, setCurrentView] = useState("Trend");
 
   const handleClick = (view: any) => {
     setCurrentView(view);

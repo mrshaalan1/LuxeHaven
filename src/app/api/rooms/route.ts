@@ -6,7 +6,7 @@ connect();
 
 export async function GET(request: NextRequest) {
   try {
-    const room = await Room.find({}, "-_id");
+    const room = await Room.find({});
     return NextResponse.json({
       room,
     });

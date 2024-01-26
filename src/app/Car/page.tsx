@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Navbar from "../components/NavBar";
 import Footer from "@/app/components/Footer";
-import Skeleton from "@/app/components/carSkeleton";
+import Skeleton from "@/app/components/Skeleton";
 
 function Car() {
   interface CarObject {

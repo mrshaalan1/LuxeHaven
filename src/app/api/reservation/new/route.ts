@@ -1,15 +1,16 @@
 import connect from "@/dbConfig/dbConfig";
 import Reservation from "@/models/reservationModel";
 import Room from "@/models/roomModel";
-import Car from "@/models/carModel";
 import { NextRequest, NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
+import { getDataFromToken } from "@/helpers/getDataFromToken";
 
 connect();
 
 export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();
+    console.log(reqBody);
+    
     const {
       RoomId,
       roomType,
@@ -18,7 +19,6 @@ export async function POST(request: NextRequest) {
       checkOutDate,
       spa,
       gym,
-      token,
       carRentalFrom,
       carRentalTo,
     } = reqBody;
@@ -28,51 +28,46 @@ export async function POST(request: NextRequest) {
     const carRentalFromObj = new Date(carRentalFrom);
     const carRentalToObj = new Date(carRentalTo);
 
-    const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET!);
+    const userId:any = await getDataFromToken(request);
 
-    let userId;
-
-    if (typeof decodedToken !== "string") {
-      userId = decodedToken.id;
-    } else {
-      return NextResponse.json({ message: "Invalid token" }, { status: 401 });
-    }
-
-    let existingRoomReservation = await Reservation.findOne({
-      customer: userId,
-      RoomId: { $ne: null },
-    });
-
-    let hasRoomReservation = false;
-    if (roomType) {
-      existingRoomReservation = await Reservation.findOne({
-        customer: userId,
-        RoomId: { $ne: null },
-      });
-      if (existingRoomReservation) {
-        hasRoomReservation = true;
-      }
-    }
-
-    if (existingRoomReservation && car) {
-      existingRoomReservation.CarId = car;
-      existingRoomReservation.CarRentalFrom = carRentalFrom;
-      existingRoomReservation.CarRentalTo = carRentalTo;
-    }
-
-    // Check if user already has any car reservation
-    const existingCarReservation = await Reservation.findOne({
-      customer: userId,
-    });
-
-    if (existingCarReservation && !hasRoomReservation) {
+    // Check if the user is trying to rent a car before reserving a room
+    if (car && !roomType) {
       return NextResponse.json(
-        { message: "User must have a Room reservation before renting a Car" },
+        { message: "User must reserve a room before renting a car" },
         { status: 405 }
       );
     }
 
-    if (carRentalFromObj < checkInDateObj || carRentalToObj > checkOutDateObj) {
+    // Check if the user already reserved a car
+    const existingCarReservation = await Reservation.findOne({
+      customer: userId,
+      CarId: { $ne: null },
+    });
+
+    if (existingCarReservation) {
+      return NextResponse.json(
+        { message: "User already reserved a car" },
+        { status: 405 }
+      );
+    }
+    
+    // Check if the user already reserved a room
+    const existingRoomReservation = await Reservation.findOne({
+      customer: userId,
+    });
+
+    if (existingRoomReservation) {
+      return NextResponse.json(
+        { message: "User already reserved a room" },
+        { status: 405 }
+      );
+    }
+
+    // Check if car rental period is within the room reservation period
+    if (
+      (carRentalFromObj < checkInDateObj || carRentalToObj > checkOutDateObj) &&
+      roomType
+    ) {
       return NextResponse.json(
         {
           message:
@@ -81,7 +76,9 @@ export async function POST(request: NextRequest) {
         { status: 406 }
       );
     }
-    let existingReservation = await Reservation.findOne({ customer: userId });
+
+    // Check if the user already has a reservation
+    const existingReservation = await Reservation.findOne({ customer: userId });
 
     if (existingReservation) {
       return NextResponse.json(
@@ -90,10 +87,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check if the room exists
     const room = roomType ? await Room.findOne({ RoomType: roomType }) : null;
     if (roomType && !room) {
       return NextResponse.json({ message: "Room not found" }, { status: 404 });
     }
+    const roomIdAsString = RoomId.toString();
+
+
+    // Create or update the reservation
     try {
       if (existingRoomReservation) {
         existingRoomReservation.carReservation = {
@@ -105,7 +107,7 @@ export async function POST(request: NextRequest) {
       } else {
         const reservation = new Reservation({
           customer: userId,
-          RoomId: RoomId,
+          RoomId: roomIdAsString,
           reservationFrom: checkInDate,
           reservationTo: checkOutDate,
           spa: spa,

@@ -6,8 +6,6 @@ import Footer from "@/app/components/Footer";
 import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
-import Car from "@/models/carModel";
-import { json } from "stream/consumers";
 
 export default function myreservations() {
   interface Reservation {
@@ -55,40 +53,41 @@ export default function myreservations() {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      axios
-        .post("http://localhost:3000/api/users/list", {
-          token: token,
-        })
-        .then((response) => {
-          const updatedReservations = response.data.reservations.map(
-            async (reservation: any) => {
-              const roomResponse = await axios.get(
-                `http://localhost:3000/api/rooms/${reservation.RoomId}`
-              );
+    axios
+      .get("http://localhost:3000/api/users/list", {})
+      .then(async (response) => {
+        console.log(response.data.reservations[0]);
 
-              const carResponse = await axios.get(
-                `http://localhost:3000/api/cars/car/${reservation.carReservation.CarId}`
-              );
-              setCarDetails(carResponse.data.car);
+        const updatedReservations = response.data.reservations[0];
 
-              setRoomDetails(roomResponse.data.room);
+        const promises = Object.keys(updatedReservations).map(async (key) => {
+          const reservation = updatedReservations[key];
+          let room = reservation?.RoomId;
+          let car = reservation?.carReservation?.CarId;
 
-              return {
-                ...reservation,
-                roomDetails: roomResponse.data.room,
-                carDetails: carResponse.data.car,
-              };
-            }
-          );
-          Promise.all(updatedReservations)
-            .then(setReservations)
-            .catch((error) => {
-              console.error("Error:", error);
-            });
+          const roomResponse = room
+            ? await axios.get(`http://localhost:3000/api/rooms/${room}`)
+            : null;
+
+          const carResponse = car
+            ? await axios.get(`http://localhost:3000/api/cars/car/${car}`)
+            : null;
+
+          return {
+            ...reservation,
+            roomDetails: roomResponse?.data.room || null,
+            carDetails: carResponse?.data.car || null,
+          };
         });
-    }
+
+        Promise.all(promises)
+          .then((result) => {
+            setReservations(result);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      });
   }, []);
 
   const groupedReservations = reservations.reduce(
@@ -113,43 +112,18 @@ export default function myreservations() {
         </h1>
       </div>
       <div>
-        <div className="flex justify-center">
-          <div className="join">
-            <div>
-              <div>
-                <input
-                  className="input input-bordered join-item bg-gray-200 text-black"
-                  placeholder="Search"
-                />
-              </div>
-            </div>
-            {/* <select className="select select-bordered join-item text-gray-700 hover:bg-gray-300 bg-gray-200">
-              <option disabled selected>
-                Filter
-              </option>
-              <option>Rooms</option>
-              <option>Cars</option>
-              <option>Menu Items</option>
-            </select> */}
-
-            <div className="indicator">
-              <button className="btn join-item bg-gray-200 hover:bg-gray-300">
-                Search
-              </button>
-            </div>
-          </div>
-        </div>
+        
         <div>
           {Object.entries(groupedReservations).map(
             ([dateRange, reservations]) => (
               <div key={dateRange}>
                 {reservations.map((reservation) => (
                   <>
+                  <div className="grid grid-cols-2 ">
                     {roomDetails && (
-                      <div className=" bg-sand overflow-hidden shadow-md mt-10 mx-72 p-6 rounded-md relative">
-                        {/* <h1>{JSON.stringify(roomDetails)}</h1> */}
+                      <div className=" bg-sand overflow-hidden shadow-md my-5 p-3 rounded-md relative mx-10">
                         <Image
-                          src={roomDetails.RoomPicUrl}
+                          src="/assets/rooms/Room1.png"
                           alt={roomDetails.RoomType}
                           className="w-full object-cover rounded-lg"
                           height={500}
@@ -163,10 +137,10 @@ export default function myreservations() {
                             View
                           </Link>
                         </div>
-                        <div className="bg-primary-dark text-sky text-xs uppercase font-bold rounded-full p-2 absolute top-0 mt-9 ml-1 shadow-md">
+                        <div className="bg-primary-dark text-sky text-xs uppercase font-bold rounded-full p-2 absolute top-0 right-10 mt-9 ml-1 shadow-md">
                           <span>{roomDetails.RoomType}</span>
                         </div>
-                        <div className="bg-primary-dark text-sky text-xs uppercase font-bold rounded-full p-2 absolute top-0 right-0 mt-9 mr-1 shadow-md">
+                        <div className="bg-primary-dark text-sky text-xs uppercase font-bold rounded-full p-2 absolute top-0 left-9 mt-9 mr-1 shadow-md">
                           <span className="text-l">
                             Room Number: {roomDetails.RoomNumber}
                           </span>
@@ -179,12 +153,20 @@ export default function myreservations() {
                         >
                           Delete Room Reservation
                         </button>
+                        <button
+                          className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-primary-dark hover:bg-sky rounded-full bg-primary absolute bottom-4 left-4"
+                          onClick={() =>
+                            deleteReservation(reservation._id.$oid, "room")
+                          }
+                        >
+                          Modify Room Reservation
+                        </button>
                       </div>
                     )}
                     {carDetails && (
-                      <div className=" bg-primary-dark rounded overflow-hidden shadow-md mt-10 mx-72 p-8 relative">
+                      <div className=" bg-primary-dark overflow-hidden shadow-md my-5 p-3 rounded-md relative mx-10">
                         <Image
-                          src={carDetails.CarPicUrl}
+                          src="/assets/rooms/Room5.png"
                           alt={carDetails.CarName}
                           className="w-full object-cover rounded-lg"
                           height={500}
@@ -211,6 +193,8 @@ export default function myreservations() {
                         </button>
                       </div>
                     )}
+
+                  </div>
                   </>
                 ))}
               </div>

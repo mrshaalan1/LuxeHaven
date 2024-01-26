@@ -3,18 +3,17 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Button, message } from "antd";
-import Link from "next/link";
 import Navbar from "../components/NavBar";
 import Footer from "@/app/components/Footer";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Swal from "sweetalert2";
+import Skeleton from "@/app/components/Skeleton";
 
 interface DishObject {
   dish: {
-    _id:number;
-    RestaurantItemId: number;
-    RestaurantItempPicUrl: string;
+    _id: number;
+    RestaurantItempPic: string;
     RestaurantItemName: string;
     RestaurantItemIngredient: string;
     RestaurantItemType: string;
@@ -34,14 +33,14 @@ interface Item {
   quantity?: number;
 }
 
-let swalInstance:any;
+let swalInstance: any;
 
 function Menu() {
   const [cart, setCart] = useState<Item[]>([]);
   const [showCart, setShowCart] = useState(false);
   const [dishs, setDishs] = useState<DishObject | null>(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [types, setTypes] = useState<string[]>([]);
   const [filter, setFilter] = useState("");
   const [sort, setSort] = useState("");
   const [query, setQuery] = useState("");
@@ -49,9 +48,7 @@ function Menu() {
   const addToCart = (item: Item) => {
     message.success(item.RestaurantItemName + " Was Added");
     setCart((prevCart) => {
-      const itemExists = prevCart.find(
-        (cartItem) => cartItem._id === item._id
-      );
+      const itemExists = prevCart.find((cartItem) => cartItem._id === item._id);
       if (itemExists) {
         return prevCart.map((cartItem) =>
           cartItem._id === item._id
@@ -101,7 +98,7 @@ function Menu() {
       },
     });
 
-    swalInstance.then((result:any) => {
+    swalInstance.then((result: any) => {
       if (result.isConfirmed) {
         let cartContent = "";
         cart.forEach((item) => {
@@ -147,7 +144,14 @@ function Menu() {
       .then((data) => {
         console.log(data);
         setDishs(data);
-        setLoading(false);
+        const uniqueBrands = Array.from(
+          new Set(
+            data.dish.map(
+              (dish: { RestaurantItemType: string }) => dish.RestaurantItemType
+            )
+          )
+        ) as string[];
+        setTypes(uniqueBrands);
       })
       .catch((error) => {
         console.error(
@@ -155,15 +159,14 @@ function Menu() {
           error
         );
         setError(error);
-        setLoading(false);
       });
   }, []);
 
-  if (loading) return "Loading...";
   if (error) return "An error occurred.";
 
   return (
     <div className="Menu bg-sky">
+      <div></div>
       <Navbar />
 
       <div className="flex justify-center mb-5 mt-10">
@@ -184,10 +187,9 @@ function Menu() {
             <option disabled selected>
               Filter
             </option>
-            <option>BREAKFAST</option>
-            <option>LUNCH</option>
-            <option>DINNER</option>
-            <option>DRINK</option>
+            {types.map((type, index) => (
+              <option key={index}>{type}</option>
+            ))}
           </select>
 
           <select
@@ -221,71 +223,71 @@ function Menu() {
         </div>
       </div>
       <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-1">
-        {dishs &&
-          dishs.dish
-            .filter(
-              (dish) => dish.RestaurantItemType === filter || filter === ""
-            )
-            .filter((dish) =>
-              dish.RestaurantItemName.toLowerCase().includes(
-                query.toLowerCase()
+        {dishs
+          ? dishs.dish
+              .filter(
+                (dish) => dish.RestaurantItemType === filter || filter === ""
               )
-            )
-            .sort((a, b) => {
-              if (sort === "asc")
-                return a.RestaurantItemPrice - b.RestaurantItemPrice;
-              else if (sort === "desc")
-                return b.RestaurantItemPrice - a.RestaurantItemPrice;
-              else return 0;
-            })
-            .map(
-              ({
-                _id,
-                RestaurantItemId,
-                RestaurantItempPicUrl,
-                RestaurantItemName,
-                RestaurantItemIngredient,
-                RestaurantItemType,
-                RestaurantItemPrice,
-              }) => (
-                <>
-                  <div
-                    key={_id}
-                    className=" rounded-2xl overflow-hidden shadow-xl m-5 p-3 relative"
-                    style={{
-                      backgroundColor: "#009688",
-                    }}
-                  >
-                    <Image
-                      src={RestaurantItempPicUrl}
-                      alt={RestaurantItemName}
-                      className="w-full h-52 object-cover rounded-lg cursor-pointer"
-                      height={500}
-                      width={500}
-                      onClick={() =>
-                        addToCart({
-                          _id,
-                          RestaurantItemName,
-                          RestaurantItemPrice,
-                        })
-                      }
-                    />
-                    <div className=" m-4">
-                      <span className=" font-bold">{RestaurantItemName}</span>
-                      <span className=" block text-zinc-200 text-sm ">
-                        {RestaurantItemIngredient}{" "}
-                      </span>
-                    </div>
-                    <div className="bg-primary text-sky text-xs uppercase font-bold rounded-full p-2 absolute top-0 mt-4 ml-1 shadow-md">
-                      <span>{RestaurantItemType}</span>
-                    </div>
-                    <div className="bg-primary text-sky text-s uppercase font-bold rounded-full p-2 absolute bottom-24 right-5 mt-4 ml-1 shadow-md">
-                      <span>${RestaurantItemPrice}</span>
-                    </div>
-                  </div>
-                </>
+              .filter((dish) =>
+                dish.RestaurantItemName.toLowerCase().includes(
+                  query.toLowerCase()
+                )
               )
-            )}
+              .sort((a, b) => {
+                if (sort === "asc")
+                  return a.RestaurantItemPrice - b.RestaurantItemPrice;
+                else if (sort === "desc")
+                  return b.RestaurantItemPrice - a.RestaurantItemPrice;
+                else return 0;
+              })
+              .map(
+                ({
+                  _id,
+                  RestaurantItempPic,
+                  RestaurantItemName,
+                  RestaurantItemIngredient,
+                  RestaurantItemType,
+                  RestaurantItemPrice,
+                }) => (
+                  <>
+                    <div
+                      key={_id}
+                      className=" rounded-2xl overflow-hidden shadow-xl m-5 p-3 relative"
+                      style={{
+                        backgroundColor: "#02a696",
+                      }}
+                    >
+                      <Image
+                        src={"data:image/png;base64," + RestaurantItempPic}
+                        alt={RestaurantItemName}
+                        className="w-full h-52 object-cover rounded-lg cursor-pointer"
+                        height={500}
+                        width={500}
+                        onClick={() =>
+                          addToCart({
+                            _id,
+                            RestaurantItemName,
+                            RestaurantItemPrice,
+                          })
+                        }
+                      />
+                      <div className=" m-4">
+                        <span className=" font-bold">{RestaurantItemName}</span>
+                        <span className=" block text-zinc-200 text-sm ">
+                          {RestaurantItemIngredient}{" "}
+                        </span>
+                      </div>
+                      <div className="bg-primary text-sky text-xs uppercase font-bold rounded-full p-2 absolute top-0 mt-4 ml-1 shadow-md">
+                        <span>{RestaurantItemType}</span>
+                      </div>
+                      <div className="bg-primary text-sky text-s uppercase font-bold rounded-full p-2 absolute bottom-24 right-5 mt-4 ml-1 shadow-md">
+                        <span>${RestaurantItemPrice}</span>
+                      </div>
+                    </div>
+                  </>
+                )
+              )
+          : Array.from({ length: 6 }).map((_, idx) => <Skeleton key={idx} />)}
       </div>
 
       <div className="pt-10">
