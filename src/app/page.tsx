@@ -1,12 +1,10 @@
 "use client";
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import Navbar from "./components/NavBar";
 import Footer from "@/app/components/Footer";
 import { useTypewriter, Cursor } from "react-simple-typewriter";
-
-// import Video from 'next-video'
-// import home from '../../../videos/home.mp4'
 
 export default function Home() {
   const [text, { isDelete }] = useTypewriter({
@@ -55,7 +53,7 @@ export default function Home() {
             <Image
               className="h-80 w-full object-cover shadow-lg rounded-xl"
               src={require("./images/home/Relaxing.png")}
-              alt="relaxing"
+              alt="main"
             />
           </li>
 
@@ -63,7 +61,7 @@ export default function Home() {
             <Image
               className="h-96 object-center w-full object-cover shadow-lg rounded-xl"
               src={require("./images/home/Room.png")}
-              alt="breathing"
+              alt="rooms"
             />
           </li>
           <li className="lg:col-span-2 xs:col-span-4">
@@ -99,14 +97,14 @@ export default function Home() {
             <Image
               className="h-72 w-full object-cover shadow-lg rounded-xl"
               src={require("./images/home/car.png")}
-              alt="blood"
+              alt="car"
             />
           </li>
           <li className=" lg:col-span-2 col-span-4 md:col-start-2 xs:col-start-1">
             <Image
               className="max-h-72 w-full object-cover shadow-lg rounded-xl"
               src={require("./images/home/menu.png")}
-              alt="heal"
+              alt="menu"
             />
           </li>
           <li className="lg:col-span-2 xs:col-span-4">
@@ -132,12 +130,14 @@ export default function Home() {
             </li>
           </div>
 
-          <li className=" lg:col-span-2 col-span-4 md:col-start-2 xs:col-start-1">
+          <li className=" lg:col-span-2 col-span-4 md:col-start-2 xs:col-start-1 ">
+            <Link href={"/rooms"}>
             <Image
-              className="h-80 w-full object-cover shadow-lg rounded-xl"
+              className="h-80 w-full object-cover shadow-lg rounded-xl hover:bg-primary-dark hover:border-8 hover:border-primary"
               src={require("./images/home/this way.png")}
-              alt="brain"
+              alt="room"
             />
+            </Link>
           </li>
         </ul>
         <div>

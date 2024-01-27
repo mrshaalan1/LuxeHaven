@@ -34,8 +34,7 @@ export interface IReservation {
   customer: mongoose.Types.ObjectId;
   room: mongoose.Types.ObjectId;
   menuItem: mongoose.Types.ObjectId;
-  //TODO: change to object
-  CarId: number;
+  CarId: mongoose.Types.ObjectId;
   reservationFrom: Date;
   reservationTo: Date;
   CarRentalTo: Date;

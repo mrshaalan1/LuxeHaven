@@ -70,7 +70,7 @@ const LogIn: React.FC = () => {
         console.log("Login success", response.data);
         message.success("Logged In Successfully");
         localStorage.setItem("token", response.data.token);
-        router.push("/myprofile");
+        router.push("/");
       })
       .catch((error) => {
         if (error.response) {

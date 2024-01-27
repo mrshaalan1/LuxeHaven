@@ -9,6 +9,7 @@ import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Swal from "sweetalert2";
 import Skeleton from "@/app/components/Skeleton";
+import axios from "axios";
 
 interface DishObject {
   dish: {
@@ -45,18 +46,29 @@ function Menu() {
   const [sort, setSort] = useState("");
   const [query, setQuery] = useState("");
 
-  const addToCart = (item: Item) => {
+  const addToCart = (item:any) => {
     message.success(item.RestaurantItemName + " Was Added");
     setCart((prevCart) => {
       const itemExists = prevCart.find((cartItem) => cartItem._id === item._id);
       if (itemExists) {
         return prevCart.map((cartItem) =>
           cartItem._id === item._id
-            ? { ...cartItem, quantity: (cartItem.quantity || 0) + 1 }
+            ? {
+                ...cartItem,
+                quantity: (cartItem.quantity || 0) + 1,
+                menuItemId: item._id,
+              }
             : cartItem
         );
       } else {
-        return [...prevCart, { ...item, quantity: 1 }];
+        return [
+          ...prevCart,
+          {
+            ...item,
+            quantity: 1,
+            menuItemId: item._id,
+          },
+        ];
       }
     });
   };
@@ -82,9 +94,27 @@ function Menu() {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Confirm Order!",
-      preConfirm: () => {
-        window.clearCart();
+      preConfirm: async () => {
+        try {
+          const orderData: any = {
+            items: cart,
+            totalPrice: cart.reduce(
+              (acc, item) =>
+                acc + item.RestaurantItemPrice * (item.quantity || 1),
+              0
+            ),
+          };
+          //TODO: check out no-chache for axios posts :https://stackoverflow.com/questions/49263559/using-javascript-axios-fetch-can-you-disable-browser-cache
+          await axios.post("/api/menu/dish/order", orderData);
+
+          window.clearCart();
+          return true;
+        } catch (error: any) {
+          console.error("Error saving order:", error);
+          Swal.showValidationMessage(`Error: ${error.message}`);
+        }
       },
+
       footer: '<button id="clearCartButton">Clear Cart</button>',
       didOpen: () => {
         const clearCartButton = document.getElementById("clearCartButton");

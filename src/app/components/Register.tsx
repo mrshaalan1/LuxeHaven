@@ -37,8 +37,16 @@ const Register: React.FC = () => {
 
   const [form] = Form.useForm();
 
-  const onFinish = (values: any) => {
-    console.log("Received values of form: ", values);
+  const onFinish = async (values: any) => {
+    try {
+      await form.validateFields();
+
+      console.log("Received values of form: ", values);
+
+      onSignup();
+    } catch (error) {
+      console.error("Form validation failed", error);
+    }
   };
 
   const prefixSelector = (
@@ -208,12 +216,7 @@ const Register: React.FC = () => {
       </Form.Item>
 
       <Form.Item {...tailFormItemLayout}>
-        <Button
-          onClick={onSignup}
-          type="primary"
-          htmlType="submit"
-          className="bg-primary"
-        >
+        <Button htmlType="submit" type="primary" className="bg-primary">
           Register
         </Button>
       </Form.Item>

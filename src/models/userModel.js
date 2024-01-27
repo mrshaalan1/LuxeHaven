@@ -3,17 +3,17 @@ import mongoose from "mongoose";
 const userSchema = new mongoose.Schema({
    FirstName: {
       type: String,
-      required: [true, "Please provide a first name"],
+      //required: [true, "Please provide a first name"],
       unique: false,
   },
   LastName: {
       type: String,
-      required: [true, "Please provide a last name"],
+      //required: [false, "Please provide a last name"],
       unique: false,
   }, 
    Username: {
         type: String,
-        required: [true, "Please provide a username"],
+        //required: [true, "Please provide a username"],
         unique: false,
     },
     Email: {
@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema({
     },
     PhoneNumber: {
       type: Number,
-      required: [false, "Please provide a phone number"],
+      //required: [false, "Please provide a phone number"],
   },
   ProfilePicrute:{
     type: String,
