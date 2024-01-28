@@ -111,6 +111,8 @@ const Register: React.FC = () => {
           id="firstName"
           value={user.FirstName}
           onChange={(e) => setUser({ ...user, FirstName: e.target.value })}
+          style={{ fontSize: 22 }}
+          className="text-xl"
         />
       </Form.Item>
 
@@ -123,6 +125,8 @@ const Register: React.FC = () => {
           id="lastName"
           value={user.LastName}
           onChange={(e) => setUser({ ...user, LastName: e.target.value })}
+          style={{ fontSize: 22 }}
+          className="text-xl"
         />
       </Form.Item>
       <Form.Item
@@ -134,6 +138,8 @@ const Register: React.FC = () => {
           id="Username"
           value={user.Username}
           onChange={(e) => setUser({ ...user, Username: e.target.value })}
+          style={{ fontSize: 22 }}
+          className="text-xl"
         />
       </Form.Item>
       <Form.Item
@@ -154,6 +160,8 @@ const Register: React.FC = () => {
           id="email"
           value={user.Email}
           onChange={(e) => setUser({ ...user, Email: e.target.value })}
+          style={{ fontSize: 22 }}
+          className="text-xl"
         />
       </Form.Item>
 
@@ -168,7 +176,7 @@ const Register: React.FC = () => {
         ]}
         hasFeedback
       >
-        <Input.Password />
+        <Input.Password style={{ fontSize: 22 }} className="text-xl" />
       </Form.Item>
 
       <Form.Item
@@ -197,6 +205,8 @@ const Register: React.FC = () => {
           id="password"
           value={user.Password}
           onChange={(e) => setUser({ ...user, Password: e.target.value })}
+          style={{ fontSize: 22 }}
+          className="text-xl"
         />
       </Form.Item>
 
@@ -207,11 +217,12 @@ const Register: React.FC = () => {
       >
         <Input
           addonBefore={prefixSelector}
-          style={{ width: "100%" }}
+          style={{ width: "100%", fontSize: 22 }}
           id="phoneNumber"
           pattern="\d*"
           value={user.PhoneNumber}
           onChange={(e) => setUser({ ...user, PhoneNumber: e.target.value })}
+          className="text-xl"
         />
       </Form.Item>
 

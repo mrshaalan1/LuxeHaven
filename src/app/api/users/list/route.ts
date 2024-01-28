@@ -13,6 +13,8 @@ export async function GET(request: NextRequest) {
       const userReservations = await Reservation.find({
         customer: userId,
       });
+      //console.log(userReservations);
+      
       return NextResponse.json(
         { reservations: userReservations },
         { status: 200 }

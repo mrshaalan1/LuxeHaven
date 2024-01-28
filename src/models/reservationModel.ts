@@ -1,7 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { IReservation } from "@/../libs/types";
 
-type ReservationDoc = Document & IReservation;
 
 const ReservationSchema = new mongoose.Schema({
   customer: { type: Schema.Types.ObjectId, ref: "User", require: true },
@@ -19,6 +17,6 @@ const ReservationSchema = new mongoose.Schema({
 
 const Reservation =
   mongoose.models.reservation ||
-  mongoose.model<ReservationDoc>("reservation", ReservationSchema);
+  mongoose.model("reservation", ReservationSchema);
 
 export default Reservation;

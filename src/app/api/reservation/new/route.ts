@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();
     console.log(reqBody);
-    
+
     const {
       RoomId,
       roomType,
@@ -23,89 +23,80 @@ export async function POST(request: NextRequest) {
       carRentalTo,
     } = reqBody;
 
-    const checkInDateObj = new Date(checkInDate);
-    const checkOutDateObj = new Date(checkOutDate);
-    const carRentalFromObj = new Date(carRentalFrom);
-    const carRentalToObj = new Date(carRentalTo);
+    const userId: any = await getDataFromToken(request);
 
-    const userId:any = await getDataFromToken(request);
-
-    // Check if the user is trying to rent a car before reserving a room
-    if (car && !roomType) {
-      return NextResponse.json(
-        { message: "User must reserve a room before renting a car" },
-        { status: 405 }
-      );
-    }
-
-    // Check if the user already reserved a car
-    const existingCarReservation = await Reservation.findOne({
+    // Check if there are any room reservations for the user
+    const existingRoomReservations = await Reservation.find({
       customer: userId,
-      CarId: { $ne: null },
+      RoomId: { $exists: true },
     });
 
-    if (existingCarReservation) {
-      return NextResponse.json(
-        { message: "User already reserved a car" },
-        { status: 405 }
-      );
-    }
-    
-    // Check if the user already reserved a room
-    const existingRoomReservation = await Reservation.findOne({
-      customer: userId,
-    });
+    // Check if the new reservation period overlaps with any existing room reservation period
+    const isOverlap = existingRoomReservations.some((reservation) =>
+      checkDateOverlap(
+        new Date(reservation.reservationFrom),
+        new Date(reservation.reservationTo),
+        new Date(checkInDate),
+        new Date(checkOutDate)
+      )
+    );
 
-    if (existingRoomReservation) {
-      return NextResponse.json(
-        { message: "User already reserved a room" },
-        { status: 405 }
-      );
-    }
-
-    // Check if car rental period is within the room reservation period
-    if (
-      (carRentalFromObj < checkInDateObj || carRentalToObj > checkOutDateObj) &&
-      roomType
-    ) {
+    if (isOverlap) {
+      // If there is an overlap with any room reservation, return an error
       return NextResponse.json(
         {
           message:
-            "Car rental period cannot be outside the room reservation period",
+            "New reservation period must not overlap with existing room reservations",
         },
-        { status: 406 }
+        { status: 405 }
       );
     }
 
-    // Check if the user already has a reservation
-    const existingReservation = await Reservation.findOne({ customer: userId });
+    // Find the room reservation that matches the car rental period
+    const matchingRoomReservation = existingRoomReservations.find(
+      (reservation) =>
+        checkDateOverlap(
+          new Date(reservation.reservationFrom),
+          new Date(reservation.reservationTo),
+          new Date(carRentalFrom),
+          new Date(carRentalTo)
+        )
+    );
 
-    if (existingReservation) {
+    console.log("matching: " + matchingRoomReservation);
+
+    if (matchingRoomReservation) {
+      console.log("1");
+
+      // Update the existing room reservation to include car reservation details
+      matchingRoomReservation.carReservation = {
+        CarId: car,
+        CarRentalFrom: carRentalFrom,
+        CarRentalTo: carRentalTo,
+      };
+
+      await matchingRoomReservation.save();
+
       return NextResponse.json(
-        { message: "User already has a reservation" },
-        { status: 400 }
+        { message: "Car reservation added to existing room reservation" },
+        { status: 200 }
       );
-    }
+    } else {
+      // If no matching room reservation is found, create a new room reservation
+      // Check if the room exists
+      const room = roomType ? await Room.findOne({ RoomType: roomType }) : null;
+      if (roomType && !room) {
+        return NextResponse.json(
+          { message: "Room not found" },
+          { status: 404 }
+        );
+      }
 
-    // Check if the room exists
-    const room = roomType ? await Room.findOne({ RoomType: roomType }) : null;
-    if (roomType && !room) {
-      return NextResponse.json({ message: "Room not found" }, { status: 404 });
-    }
-    const roomIdAsString = RoomId.toString();
+      const roomIdAsString = RoomId?.toString();
 
-
-    // Create or update the reservation
-    try {
-      if (existingRoomReservation) {
-        existingRoomReservation.carReservation = {
-          CarId: car,
-          CarRentalFrom: carRentalFrom,
-          CarRentalTo: carRentalTo,
-        };
-        await existingRoomReservation.save();
-      } else {
-        const reservation = new Reservation({
+      // Create a new room reservation with room and car details
+      if (roomIdAsString) {
+        const newRoomReservation = new Reservation({
           customer: userId,
           RoomId: roomIdAsString,
           reservationFrom: checkInDate,
@@ -118,22 +109,37 @@ export async function POST(request: NextRequest) {
             CarRentalTo: carRentalTo,
           },
         });
-        await reservation.save();
-      }
-    } catch (err) {
-      console.error(err);
-      return NextResponse.json(
-        { message: "Error saving reservation" },
-        { status: 500 }
-      );
-    }
 
-    return NextResponse.json(
-      { message: "Reservation Successful" },
-      { status: 200 }
-    );
+        await newRoomReservation.save();
+
+        return NextResponse.json(
+          { message: "Room reservation with car details created" },
+          { status: 200 }
+        );
+      } else {
+        // Handle the case where the room does not exist
+        return NextResponse.json(
+          { message: "Room not found" },
+          { status: 406  }
+        );
+      }
+    }
   } catch (error: any) {
     console.log(error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
+}
+
+function checkDateOverlap(
+  startDate1: Date,
+  endDate1: Date,
+  startDate2: Date,
+  endDate2: Date
+): boolean {
+  return (
+    (startDate1 <= startDate2 && startDate2 < endDate1) ||
+    (startDate1 < endDate2 && endDate2 <= endDate1) ||
+    (startDate2 <= startDate1 && startDate1 < endDate2) ||
+    (startDate2 < endDate1 && endDate1 <= endDate2)
+  );
 }

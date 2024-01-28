@@ -74,7 +74,7 @@ function Reserve() {
     return (
       current &&
       (current < dayjs().endOf("day") ||
-        current < dayjs(checkInDate).add(1, "day"))
+        current < dayjs(checkInDate))
     );
   };
 
@@ -121,7 +121,7 @@ function Reserve() {
           Swal.fire({
             icon: "error",
             title: "Oops...",
-            text: "User already reserved a room!",
+            text: "There was an error reserving a room!",
           });
           console.error("There was an error!", error);
         }

@@ -27,6 +27,7 @@ export const config = {
     '/admin',
     '/myprofile',
     '/myreservations',
+    '/Reserve',
   ]
 }
 

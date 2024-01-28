@@ -70,7 +70,7 @@ const LogIn: React.FC = () => {
         console.log("Login success", response.data);
         message.success("Logged In Successfully");
         localStorage.setItem("token", response.data.token);
-        router.push("/");
+        router.push("/rooms");
       })
       .catch((error) => {
         if (error.response) {
@@ -145,9 +145,11 @@ const LogIn: React.FC = () => {
               <Input
                 value={user.Email}
                 onChange={(e) => setUser({ ...user, Email: e.target.value })}
+                style={{fontSize:22}}
                 className="text-xl"
+
               />
-            </Form.Item >
+            </Form.Item>
 
             <Form.Item<FieldType>
               label="Password"
@@ -158,7 +160,7 @@ const LogIn: React.FC = () => {
                   message: "Please input your password!",
                 },
               ]}
-              style={{fontSize:10}}
+              style={{fontSize:22}}
               className="text-xl"
             >
               <Input.Password
