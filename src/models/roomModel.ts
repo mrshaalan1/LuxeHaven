@@ -1,7 +1,5 @@
-import { IRoom } from "@/../libs/types";
 import mongoose, { Document, Schema } from "mongoose";
 
-type RoomDoc = Document & IRoom;
 
 const RoomSchema = new mongoose.Schema({
   RoomId: {
@@ -24,8 +22,7 @@ const RoomSchema = new mongoose.Schema({
   },
 });
 
-const Room =
-  (mongoose.models.room as mongoose.Model<RoomDoc>) ||
-  mongoose.model<RoomDoc>("room", RoomSchema);
+const Room = mongoose.models.room || mongoose.model("room", RoomSchema);
+
 
 export default Room;

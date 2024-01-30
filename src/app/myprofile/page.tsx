@@ -53,11 +53,6 @@ export default function myprofile() {
     getUserDetails();
   }, []);
 
-  useEffect(() => {
-    if (data?.ProfilePicrute) {
-      setImageUrl(`data:image/png;base64,${data.ProfilePicrute.split(",")[1]}`);
-    }
-  }, [data]);
 
   const getUserDetails = async () => {
     const res = await axios.get("/api/users/me");

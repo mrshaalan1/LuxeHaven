@@ -15,6 +15,7 @@ function Room() {
       RoomType: string;
       RoomDescription: string;
       RoomPrice: number;
+      cachedImagePath?: string;
     }[];
   }
 
@@ -52,7 +53,7 @@ function Room() {
       <div className="bg-primary-dark h-3/4 w-full absolute top-[33%] "></div>
       <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-1">
         {rooms
-          ? rooms.room.map(({ RoomId, RoomType, RoomPic }) => (
+          ? rooms.room.map(({ RoomId, RoomType, cachedImagePath }) => (
               <>
                 <div
                   key={RoomId}
@@ -60,7 +61,7 @@ function Room() {
                 >
                   <Link href="/Reserve">
                     <Image
-                      src={"data:image/png;base64," + RoomPic}
+                      src={cachedImagePath ? `${cachedImagePath}` : ``}
                       alt={RoomType}
                       className="w-full h-72 object-cover rounded-lg"
                       height={500}

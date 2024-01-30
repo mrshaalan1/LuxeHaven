@@ -1,7 +1,5 @@
-import { ICar } from "@/../libs/types";
 import mongoose, { Document, Schema } from "mongoose";
 
-type CarDoc = Document & ICar;
 
 const CarSchema = new mongoose.Schema({
   CarId: {
@@ -24,8 +22,7 @@ const CarSchema = new mongoose.Schema({
   },
 });
 
-const Car =
-  (mongoose.models.car as mongoose.Model<CarDoc>) ||
-  mongoose.model<CarDoc>("car", CarSchema);
+const Car = mongoose.models.car || mongoose.model("car", CarSchema);
+
 
 export default Car;

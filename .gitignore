@@ -90,3 +90,5 @@ Thumbs.db
 .next/app-build-manifest.json
 .next/app-build-manifest.json
 .next/app-build-manifest.json
+
+public/imageCache/

@@ -19,8 +19,12 @@ interface DishObject {
     RestaurantItemIngredient: string;
     RestaurantItemType: string;
     RestaurantItemPrice: number;
+    cachedImagePath?: string;
   }[];
 }
+
+
+
 declare global {
   interface Window {
     clearCart: () => void;
@@ -46,7 +50,7 @@ function Menu() {
   const [sort, setSort] = useState("");
   const [query, setQuery] = useState("");
 
-  const addToCart = (item:any) => {
+  const addToCart = (item: any) => {
     message.success(item.RestaurantItemName + " Was Added");
     setCart((prevCart) => {
       const itemExists = prevCart.find((cartItem) => cartItem._id === item._id);
@@ -273,7 +277,7 @@ function Menu() {
               .map(
                 ({
                   _id,
-                  RestaurantItempPic,
+                  cachedImagePath,
                   RestaurantItemName,
                   RestaurantItemIngredient,
                   RestaurantItemType,
@@ -288,7 +292,11 @@ function Menu() {
                       }}
                     >
                       <Image
-                        src={"data:image/png;base64," + RestaurantItempPic}
+                        src={
+                          cachedImagePath
+                            ? `${cachedImagePath}`
+                            : ``
+                        }
                         alt={RestaurantItemName}
                         className="w-full h-52 object-cover rounded-lg cursor-pointer"
                         height={500}

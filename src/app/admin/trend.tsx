@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent, useEffect, useState } from "react";
 import {
   LineChart,
   Line,
@@ -9,132 +9,18 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { Space, Table } from "antd";
-import type { TableProps } from "antd";
-
-
+import { Space, Table, message } from "antd";
+import type { ColumnType } from "antd/lib/table/interface";
+import axios from "axios";
 
 interface DataType {
   key: string;
-  name: string;
-  RoomNumber: number;
-  RoomType: string;
+  customer: { $id: string };
+  RoomNumber: any;
+  RoomType: any;
   Date: string;
 }
 
-const columns: TableProps<DataType>["columns"] = [
-  {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-    render: (text) => <a>{text}</a>,
-  },
-  {
-    title: "Room Number",
-    dataIndex: "RoomNumber",
-    key: "RoomNumber",
-  },
-  {
-    title: "Room Type",
-    dataIndex: "RoomType",
-    key: "RoomType",
-  },
-  {
-    title: "Date",
-    key: "Date",
-    dataIndex: "Date",
-  },
-  {
-    title: "Action",
-    key: "action",
-    render: (_, record) => (
-      <Space size="middle">
-        <a>Delete</a>
-      </Space>
-    ),
-  },
-];
-
-const data: DataType[] = [
-  {
-    key: "1",
-    name: "John Brown",
-    RoomNumber: 32,
-    RoomType: "King",
-    Date: "From: 20/1/2024, Till: 21/1/2024",
-  },
-  {
-    key: "2",
-    name: "Jim Green",
-    RoomNumber: 42,
-    RoomType: "Deluxe",
-    Date: "From: 20/1/2024, Till: 25/1/2024",
-  },
-  {
-    key: "3",
-    name: "Joe Black",
-    RoomNumber: 30,
-    RoomType: "Superior",
-    Date: "From: 22/1/2024, Till: 24/1/2024",
-  },
-];
-
-const graphData = [
-  {
-    name: "20/1/2024",
-    Room: 30,
-    Car: 12,
-  },
-  {
-    name: "21/1/2024",
-    Room: 31,
-    Car: 9,
-  },
-  {
-    name: "22/1/2024",
-    Room: 22,
-    Car: 10,
-  },
-  {
-    name: "23/1/2024",
-    Room: 24,
-    Car: 14,
-  },
-  {
-    name: "24/1/2024",
-    Room: 28,
-    Car: 8,
-  },
-  {
-    name: "25/1/2024",
-    Room: 30,
-    Car: 15,
-  },
-  {
-    name: "26/1/2024",
-    Room: 34,
-    Car: 14,
-  },
-];
-
-interface CustomizedLabelProps {
-  x?: number;
-  y?: number;
-  stroke?: string;
-  value?: string | number;
-}
-
-class CustomizedLabel extends PureComponent<CustomizedLabelProps> {
-  render() {
-    const { x, y, stroke, value } = this.props;
-
-    return (
-      <text x={x} y={y} dy={-4} fill={stroke} fontSize={10} textAnchor="middle">
-        {value}
-      </text>
-    );
-  }
-}
 interface CustomizedAxisTickProps {
   x?: number;
   y?: number;
@@ -161,57 +47,247 @@ class CustomizedAxisTick extends PureComponent<CustomizedAxisTickProps> {
     );
   }
 }
+export default function Example() {
+  interface Reservation {
+    _id: { $id: string };
+    customer: { $id: string };
+    RoomId: { $numberInt: string };
+    CarId: { $numberInt: string };
+    CarRentalFrom: string;
+    CarRentalTo: string;
+    spa: boolean;
+    gym: boolean;
+    __v: { $numberInt: string };
+    reservationFrom: string;
+    reservationTo: string;
+    roomDetails?: Record<string, any> | null;
+    carDetails?: Record<string, any> | null;
+  }
+  const columns: ColumnType<DataType>[] = [
+    {
+      title: "Customer ID",
+      dataIndex: "customer",
+      key: "customer",
+      //render: (text) => <a>{text.$oid}</a>,
+    },
+    {
+      title: "Room Number",
+      dataIndex: "RoomNumber",
+      key: "RoomNumber",
+    },
+    {
+      title: "Room Type",
+      dataIndex: "RoomType",
+      key: "RoomType",
+    },
+    {
+      title: "Date",
+      dataIndex: "Date",
+      key: "Date",
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_: any, record: any) => (
+        <Space size="middle">
+          {record.key && (
+            <>
+              <a onClick={() => handleDelete(record.key)}>Delete</a>
+            </>
+          )}
+        </Space>
+      ),
+    },
+  ];
 
-export default class Example extends PureComponent {
-  static demoUrl =
-    "https://codesandbox.io/s/line-chart-with-customized-label-hs5b7";
+  const [data, setData] = useState<DataType[]>([]);
+  const [reservations, setReservations] = useState<Reservation[]>([]);
 
-  render() {
-    return (
-      <div>
-        <div className="flex justify-center items-center my-10">
-          <div
-            style={{ width: "60%", height: "400px" }}
-            className="bg-zinc-100 flex"
-          >
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart
-                width={500}
-                height={300}
-                data={graphData}
-                margin={{
-                  top: 20,
-                  right: 30,
-                  left: 20,
-                  bottom: 10,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis
-                  dataKey="name"
-                  height={60}
-                  tick={<CustomizedAxisTick />}
-                />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line
-                  type="monotone"
-                  dataKey="Car"
-                  stroke="#8884d8"
-                  label={<CustomizedLabel />}
-                />
-                <Line type="monotone" dataKey="Room" stroke="#82ca9d" />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-        <div className="bg-primary-dark flex justify-center items-center pt-5">
-          <div className="text-2xl" style={{fontSize: 12, width: "60%", height: "400px"}}>
-            <Table columns={columns} dataSource={data} />
-          </div>
+  const fetchData = async () => {
+    try {
+      const response = await fetch("/api/reservation/list");
+      const fetchedData = await response.json();
+      //console.log("Fetched Data:", fetchedData);
+      setData(fetchedData.reservations);
+      const updatedReservations = fetchedData.reservations;
+
+      const promises = updatedReservations.map(async (reservation: any) => {
+        let room = reservation?.RoomId;
+        //let car = reservation?.carReservation?.CarId;
+        const roomResponse = room
+          ? await axios.post("http://localhost:3000/api/rooms/getRoom", {
+              RoomId: room,
+            })
+          : null;
+        //console.log(roomResponse?.data.room);
+
+        // Sending GET request to get car details
+        // const carResponse = car
+        //   ? await axios.post("/api/cars/car/getCar", {
+        //       CarId: car,
+        //     })
+        //   : null;
+
+        return {
+          ...reservation,
+          roomDetails: roomResponse?.data.room || null,
+          //carDetails: carResponse?.data.car || null,
+        };
+      });
+      const result = await Promise.all(promises);
+      setReservations(result);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const pageSize = 5;
+
+  const onChangePage = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const paginatedReservations = reservations.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
+  const paginationConfig = {
+    current: currentPage,
+    pageSize: pageSize,
+    total: reservations.length,
+    onChange: onChangePage,
+    itemRender: (current: any, type: any, originalElement: any) => {
+      if (
+        type === "prev" ||
+        type === "next" ||
+        type === "jump-prev" ||
+        type === "jump-next"
+      ) {
+        return React.cloneElement(originalElement, {
+          style: { color: "white" },
+        });
+      }
+      return (
+        <span style={{ color: current === currentPage ? "black" : "white" }}>
+          {current}
+        </span>
+      );
+    },
+  };
+
+  const today = new Date();
+  const fiveDaysFromNow = new Date(today);
+  fiveDaysFromNow.setDate(today.getDate() + 5);
+
+  const countOccurrences = (data: any, key: any) => {
+    const counts: Record<string, number> = {};
+    data.forEach((item: any) => {
+      const date = item[key]?.toString()?.substring(0, 10);
+      counts[date] = (counts[date] || 0) + 1;
+    });
+    return counts;
+  };
+
+  // Count occurrences of reservation dates
+  const roomCounts = countOccurrences(reservations, "reservationFrom");
+  //const carCounts = countOccurrences(reservations, "CarRentalFrom");
+
+  // Transform counts into graphData format
+  const transformedRoomData = Object.entries(roomCounts).map(
+    ([date, count]) => ({
+      name: date,
+      Room: count,
+    })
+  );
+
+  // const transformedCarData = Object.entries(carCounts).map(([date, count]) => ({
+  //   name: date,
+  //   Car: count,
+  // }));
+
+  const handleDelete = async (reservationId: string) => {
+    try {
+      await axios.delete("/api/reservation/delete", {
+        data: {
+          reservationId,
+          reservationType: "room",
+        },
+      });
+      message.success("Reservation Deleted successfully")
+      // After successful deletion, you may want to refetch the data or update the state
+      fetchData();
+    } catch (error) {
+      message.error("Reservation Deletion failed!!")
+      console.error("Error deleting reservation:", error);
+    }
+  };
+  const dataSource = paginatedReservations.map((reservation) => ({
+    key: reservation._id,
+    customer: reservation.customer,
+    RoomNumber: reservation.roomDetails?.RoomNumber || 0,
+    RoomType: reservation.roomDetails?.RoomType || "",
+    Date: `From: ${new Date(reservation.reservationFrom)
+      .toISOString()
+      .substring(0, 10)}, Till: ${new Date(reservation.reservationTo)
+      .toISOString()
+      .substring(0, 10)}`,
+  }));
+
+  return (
+    <div>
+      <div className="flex justify-center items-center my-10">
+        <div
+          style={{ width: "60%", height: "400px" }}
+          className="bg-zinc-100 flex"
+        >
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart
+              width={500}
+              height={300}
+              data={[...transformedRoomData /*, ...transformedCarData*/]}
+              margin={{
+                top: 20,
+                right: 30,
+                left: 20,
+                bottom: 10,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" height={60} tick={<CustomizedAxisTick />} />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              {/* <Line
+                type="monotone"
+                dataKey="Car"
+                stroke="#8884d8"
+                label={<CustomizedLabel />}
+              /> */}
+              <Line type="monotone" dataKey="Room" stroke="#82ca9d" />
+            </LineChart>
+          </ResponsiveContainer>
         </div>
       </div>
-    );
-  }
+      <div className="bg-primary-dark flex justify-center items-center pt-5">
+        <div
+          className="text-2xl"
+          style={{ fontSize: 12, width: "60%", height: "400px" }}
+        >
+          {/* {reservations.map((reservation) => (
+            <div>{reservation.roomDetails?.RoomType}</div>
+          ))} */}
+          <Table
+            columns={columns}
+            dataSource={dataSource}
+            pagination={paginationConfig}
+          />
+        </div>
+      </div>
+    </div>
+  );
 }

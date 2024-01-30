@@ -1,5 +1,4 @@
 import connect from "@/dbConfig/dbConfig";
-import User from "@/models/userModel";
 import Reservation from "@/models/reservationModel";
 import { NextRequest, NextResponse } from "next/server";
 import { getDataFromToken } from "@/helpers/getDataFromToken";
@@ -13,8 +12,7 @@ export async function GET(request: NextRequest) {
       const userReservations = await Reservation.find({
         customer: userId,
       });
-      //console.log(userReservations);
-      
+
       return NextResponse.json(
         { reservations: userReservations },
         { status: 200 }
@@ -24,28 +22,3 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ message: error }, { status: 500 });
   }
 }
-
-export async function DELETE(request: NextRequest) {
-  try {
-   const reqBody = await request.json();
-   const { reservationId, reservationType } = reqBody;
- 
-   if (reservationType === 'room') {
-     await Reservation.updateOne(
-       { _id: reservationId },
-       { $unset: { RoomId: "" } }
-     );
-   } else if (reservationType === 'car') {
-     await Reservation.updateOne(
-       { _id: reservationId },
-       { $unset: { CarId: "" } }
-     );
-   }
- 
-   return NextResponse.json({ message: "Reservation deleted successfully" }, { status: 200 });
-  } catch (error: any) {
-   console.error("Error:", error);
-   return NextResponse.json({ message: error }, { status: 500 });
-  }
- }
- 

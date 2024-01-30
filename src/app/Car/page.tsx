@@ -16,6 +16,7 @@ function Car() {
       CarDescription: string;
       CarBrand: string;
       CarPrice: number;
+      cachedImagePath?: string;
     }[];
   }
 
@@ -111,7 +112,7 @@ function Car() {
               .map(
                 ({
                   _id,
-                  CarPic,
+                  cachedImagePath,
                   CarName,
                   CarDescription,
                   CarBrand,
@@ -127,7 +128,7 @@ function Car() {
                     >
                       <Link href={"http://localhost:3000/Car/" + _id}>
                         <Image
-                          src={"data:image/png;base64," + CarPic}
+                          src={cachedImagePath ? `${cachedImagePath}` : ``}
                           alt={CarName}
                           className="w-full h-64 object-cover rounded-lg cursor-pointer"
                           height={500}

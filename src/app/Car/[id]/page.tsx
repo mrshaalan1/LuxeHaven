@@ -21,6 +21,8 @@ export default function Page() {
     CarDescription: string;
     CarBrand: string;
     CarPrice: number;
+    cachedImagePath?: string;
+
   }
 
   const { id } = useParams();
@@ -32,17 +34,16 @@ export default function Page() {
   const disabledDate = (current: any) => {
     return (
       current &&
-      (current < dayjs().endOf("day") ||
-        current < dayjs(carRentalFrom).add(1, "day"))
+      (current < dayjs().startOf("day") ||
+        current < dayjs(carRentalFrom))
     );
   };
   useEffect(() => {
-    console.log(id);
     fetch(`http://localhost:3000/api/cars/car/${id}`)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
-
+        console.log(data.car);
+        
         setCars(data.car);
       })
       .catch((error) => {
@@ -108,7 +109,7 @@ export default function Page() {
             <div className="bg-white mt-5 xl:mx-10 relative">
               <div className="overflow-hidden info-details">
                 <Image
-                  src={"data:image/png;base64," + cars.CarPic}
+                  src={cars.cachedImagePath ? `${cars.cachedImagePath}`: ``}
                   alt={cars.CarName}
                   className="w-full object-cover rounded-lg"
                   height={500}

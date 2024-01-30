@@ -25,6 +25,7 @@ function Reserve() {
     RoomRentalTo: string;
     RoomRating: number;
     __v: number;
+    cachedImagePath?: string;
   }
 
   const [rooms, setRooms] = useState<Room[]>([]);
@@ -40,7 +41,7 @@ function Reserve() {
     const selectedRoom = rooms.find((room) => room.RoomType === roomType);
 
     if (selectedRoom && checkInDate && checkOutDate) {
-      const numberOfDays = dayjs(checkOutDate).diff(checkInDate, "days") + 1;
+      const numberOfDays = dayjs(checkOutDate).diff(checkInDate, "days");
       const roomCost = selectedRoom.RoomPrice * numberOfDays;
       const spaCost = spa ? 25 : 0;
       const gymCost = gym ? 10 : 0;
@@ -73,8 +74,7 @@ function Reserve() {
   const disabledDate = (current: any) => {
     return (
       current &&
-      (current < dayjs().endOf("day") ||
-        current < dayjs(checkInDate))
+      (current < dayjs().startOf("day") || current < dayjs(checkInDate))
     );
   };
 
@@ -85,7 +85,7 @@ function Reserve() {
       return;
     }
     const selectedRoom = rooms.find((room) => room.RoomType === roomType);
-    
+
     if (!selectedRoom) {
       console.error("No room selected!");
       return;
@@ -146,7 +146,9 @@ function Reserve() {
 
       <ul className="grid md:grid-cols-3 xs:grid-cols-1 md:gap-4 xs:gap-5">
         <li className="px-4 mt-7 justify-center">
-          <label className="font-bold mb-2 text-primary text-xl">ROOM TYPE</label>
+          <label className="font-bold mb-2 text-primary text-xl">
+            ROOM TYPE
+          </label>
           <select
             className="border rounded w-full py-2 px-3 text-gray-700 mb-3 bg-gray-100 text-lg"
             id="room-type"
@@ -194,23 +196,28 @@ function Reserve() {
             Gym Service
           </Checkbox>
           <div className="w-40">
-          <p className="text-xl font-medium text-black mt-5 bg-zinc-200 "> &nbsp;&nbsp;&nbsp; Total: ${total}</p>
+            <p className="text-xl font-medium text-black mt-5 bg-zinc-200 ">
+              {" "}
+              &nbsp;&nbsp;&nbsp; Total: ${total}
+            </p>
           </div>
           <div className="w-48">
-          <p className="text-xl font-medium text-black mt-5 bg-zinc-200 "> &nbsp;&nbsp;&nbsp; Status: Available</p>
+            <p className="text-xl font-medium text-black mt-5 bg-zinc-200 ">
+              {" "}
+              &nbsp;&nbsp;&nbsp; Status: Available
+            </p>
           </div>
           <form>
             <>
               {contextHolder}
               <div className="flex justify-center items-center">
-              <Button
-                type="primary"
-                onClick={onReserve}
-                className="bg-sand hover:bg-primary text-white font-bold text-xl py-2 px-4 rounded h-12 w-72 mt-10 lg:mb-96 mr-8 "
-              >
-                Reserve
-              </Button>
-
+                <Button
+                  type="primary"
+                  onClick={onReserve}
+                  className="bg-sand hover:bg-primary text-white font-bold text-xl py-2 px-4 rounded h-12 w-72 mt-10 lg:mb-96 mr-8 "
+                >
+                  Reserve
+                </Button>
               </div>
             </>
           </form>
@@ -222,8 +229,10 @@ function Reserve() {
                 room.RoomType === roomType && (
                   <>
                     <Image
-                        src={"data:image/png;base64," + room.RoomPic}
-                        alt={room.RoomType}
+                      src={
+                        room.cachedImagePath ? `${room.cachedImagePath}` : ``
+                      }
+                      alt={room.RoomType}
                       className="w-full h-96 object-cover rounded-lg"
                       height={500}
                       width={500}
@@ -232,10 +241,12 @@ function Reserve() {
                       <span>{room.RoomPrice}$/ Day</span>
                     </div>{" "}
                     <div className="pl-5 py-5 rounded-2xl bg-primary-dark mt-10">
-                    <p className="text-zinc-100 font-bold text-xl">Description:</p>
-                    <p className="text-zinc-200 font-medium text-lg py-10">
-                      {room.RoomDescription}
-                    </p>
+                      <p className="text-zinc-100 font-bold text-xl">
+                        Description:
+                      </p>
+                      <p className="text-zinc-200 font-medium text-lg py-10">
+                        {room.RoomDescription}
+                      </p>
                     </div>
                   </>
                 )
