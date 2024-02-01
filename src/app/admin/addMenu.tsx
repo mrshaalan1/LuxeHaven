@@ -6,6 +6,7 @@ import { Button, Form, Input, Upload, message } from "antd";
 import {
   RcFile,
   UploadChangeParam,
+  UploadFile,
   UploadProps,
 } from "antd/es/upload";
 import axios from "axios";
