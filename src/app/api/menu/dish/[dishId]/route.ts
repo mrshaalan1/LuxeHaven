@@ -4,7 +4,7 @@ import Menu from "../../../../../models/menuModel";
 export async function GET(request:NextRequest){
   try {
   const dishId = request.nextUrl.pathname.split('/').pop();
-  const dish = await Menu.findOne({RestaurantItemId: dishId}, "-_id");
+  const dish = await Menu.findOne({RestaurantItemId: dishId}, "-RestaurantItempPic");
   if (!dish) {
     throw new Error("Dish not found");
   }

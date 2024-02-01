@@ -6,9 +6,10 @@ import Footer from "@/app/components/Footer";
 import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
-import { message } from "antd";
+import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
 import Skeleton from "@/app/components/Skeleton";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function myreservations() {
   interface Reservation {
@@ -73,6 +74,66 @@ export default function myreservations() {
       });
     }
   };
+  const viewOrders = async () => {
+    try {
+      const response = await axios.get("/api/menu/dish/list");
+
+      //console.log(response);
+
+      const orders = response.data.cart;
+      //console.log(orders);
+
+      const dishDetailsPromises = orders.map(async (order: any) => {
+        const dishDetails = await Promise.all(
+          order.items.map(async (item: any) => {
+            const dishRes = await axios.post("/api/menu/dish/getDish", {
+              DishId: item.menuItemId,
+            });
+            return dishRes.data;
+          })
+        );
+        return { ...order, dishDetails };
+      });
+
+      const ordersWithDishDetails = await Promise.all(dishDetailsPromises);
+
+      Swal.fire({
+        title: "My Orders",
+        html: ordersWithDishDetails
+          .map(
+            (order: any) => `
+            <div style="margin-bottom: 20px;">
+              ${
+                order.dishDetails
+                  ? `<p><strong>Dishes:</strong></p>
+                <ul>
+                  ${order.dishDetails
+                    .map(
+                      (dish: any) => `<li>${dish.dish.RestaurantItemName}</li>`
+                    )
+                    .join("")}
+                </ul>`
+                  : ""
+              }
+              <p><strong>Total Price:</strong> ${order.totalPrice}</p>
+            </div>
+            <hr>
+          `
+          )
+          .join(""),
+        icon: "info",
+        confirmButtonText: "Close",
+        width: "600px",
+      });
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+      Swal.fire({
+        title: "Error",
+        text: "An error occurred while fetching orders.",
+        icon: "error",
+      });
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -87,20 +148,20 @@ export default function myreservations() {
           let room = reservation?.RoomId;
           let car = reservation?.carReservation?.CarId;
 
-          // Sending POST request to get room details
           const roomResponse = room
             ? await axios.post("http://localhost:3000/api/rooms/getRoom", {
                 RoomId: room,
               })
             : null;
-          //console.log(roomResponse);
 
-          // Sending GET request to get car details
           const carResponse = car
             ? await axios.post("/api/cars/car/getCar", {
                 CarId: car,
               })
             : null;
+
+            //console.log(carResponse);
+            
 
           return {
             ...reservation,
@@ -142,6 +203,14 @@ export default function myreservations() {
         </h1>
       </div>
       <div>
+        <div>
+          <FontAwesomeIcon
+            onClick={viewOrders}
+            className="fixed bottom-10 right-12 z-40 bg-sand p-5 rounded-lg"
+            icon={faShoppingCart}
+            size="2xl"
+          />
+        </div>
         <div>
           {loading ? (
             // Display skeleton loading state
@@ -189,9 +258,12 @@ export default function myreservations() {
                               Room Number:{"  "}
                               {reservation.roomDetails.RoomNumber}
                             </div>
-                            <button className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-primary-dark hover:bg-sky rounded-full bg-primary absolute bottom-4 left-4">
+                            <Link
+                              href={"/Reserve/" + reservation._id}
+                              className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-primary-dark hover:bg-sky rounded-full bg-primary absolute bottom-4 left-4"
+                            >
                               Modify
-                            </button>
+                            </Link>
                           </div>
                           <button
                             className="btn btn-ghost cursor-pointer font-sans font-bold hover:text-primary-dark hover:bg-sky rounded-full bg-primary absolute bottom-4 right-4"
@@ -209,8 +281,9 @@ export default function myreservations() {
                             {/* <span>{JSON.stringify()}</span> */}
                             <Image
                               src={
-                                "data:image/png;base64," +
-                                reservation.carDetails.CarPic
+                                reservation.carDetails.cachedImagePath
+                                  ? `${reservation.carDetails.cachedImagePath}`
+                                  : ``
                               }
                               alt={reservation.carDetails.CarName}
                               className="w-full object-cover rounded-lg"
@@ -236,8 +309,10 @@ export default function myreservations() {
           )}
         </div>
       </div>
-
       <div className="pt-52">
+
+      </div>
+      <div className="pt-96">
         <Footer />
       </div>
     </div>

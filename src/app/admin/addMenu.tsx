@@ -6,10 +6,10 @@ import { Button, Form, Input, Upload, message } from "antd";
 import {
   RcFile,
   UploadChangeParam,
-  UploadFile,
   UploadProps,
 } from "antd/es/upload";
 import axios from "axios";
+import DeleteMenu from "./EditDeleteMenu"
 
 const normFile = (e: any) => {
   if (Array.isArray(e)) {
@@ -195,6 +195,7 @@ const FormDisabledDemo: React.FC = () => {
           </Form.Item>
         </Form>
       </div>
+      <DeleteMenu/>
     </div>
   );
 };

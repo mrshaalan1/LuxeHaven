@@ -25,7 +25,6 @@ export async function POST(request: NextRequest) {
 
     const userId: any = await getDataFromToken(request);
 
-    // Check if there are any room reservations for the user
     const existingRoomReservations = await Reservation.find({
       customer: userId,
       RoomId: { $exists: true },

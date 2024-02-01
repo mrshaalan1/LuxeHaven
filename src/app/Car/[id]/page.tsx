@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Footer from "@/app/components/Footer";
 import React, { useEffect, useState } from "react";
-import { DatePicker, Space, message } from "antd";
+import { Button, DatePicker, Space, message } from "antd";
 import axios from "axios";
 import dayjs, { Dayjs } from "dayjs";
 import SkeletonDetail from "@/app/components/carDetailSkeleton";
@@ -22,7 +22,6 @@ export default function Page() {
     CarBrand: string;
     CarPrice: number;
     cachedImagePath?: string;
-
   }
 
   const { id } = useParams();
@@ -30,12 +29,27 @@ export default function Page() {
   const [carRentalFrom, setCarRentalFrom] = useState<Dayjs | null>(null);
   const [carRentalTo, setCarRentalTo] = useState<Dayjs | null>(null);
   const [error, setError] = useState(null);
+  const [status, setStatus] = useState<string | null>(null);
+
+  const onCheckAvailability = async () => {
+    try {
+      const response = await axios.post("/api/reservation/availability", {
+        car: id,
+        reservationType: "car",
+        carRentalFrom,
+        carRentalTo,
+      });
+
+      setStatus(response.data.status);
+    } catch (error) {
+      console.error("Error checking availability:", error);
+    }
+  };
 
   const disabledDate = (current: any) => {
     return (
       current &&
-      (current < dayjs().startOf("day") ||
-        current < dayjs(carRentalFrom))
+      (current < dayjs().startOf("day") || current < dayjs(carRentalFrom))
     );
   };
   useEffect(() => {
@@ -43,7 +57,7 @@ export default function Page() {
       .then((response) => response.json())
       .then((data) => {
         console.log(data.car);
-        
+
         setCars(data.car);
       })
       .catch((error) => {
@@ -109,30 +123,30 @@ export default function Page() {
             <div className="bg-white mt-5 xl:mx-10 relative">
               <div className="overflow-hidden info-details">
                 <Image
-                  src={cars.cachedImagePath ? `${cars.cachedImagePath}`: ``}
+                  src={cars.cachedImagePath ? `${cars.cachedImagePath}` : ``}
                   alt={cars.CarName}
                   className="w-full object-cover rounded-lg"
                   height={500}
                   width={500}
                 />
               </div>
-              <div className="bg-primary-dark text-sky text-xs uppercase font-bold rounded-full p-2 absolute top-0 mt-3 ml-3 shadow-md">
+              <div className="bg-primary-dark text-sky text-lg uppercase font-bold rounded-full p-2 absolute top-0 mt-3 ml-3 shadow-md">
                 <span>{cars.CarBrand}</span>
               </div>
               <div>
-                <div className="bg-primary-dark text-sky text-xs uppercase font-bold rounded-full p-2 absolute mb-3 mr-3 shadow-md bottom-0 right-0 flex">
+                <div className="bg-primary-dark text-sky text-lg uppercase font-bold rounded-full p-2 absolute mb-3 mr-3 shadow-md bottom-0 right-0 flex">
                   <span>Price/Day: {cars.CarPrice}$</span>
                 </div>
               </div>
             </div>
             <div className="md:pt-28 text-xl text-gray-700">
-              <div>
-                <p className="font-bold text-2xl text-primary-dark pb-2 px-10">
-                  Car Descreption:
+              <div className="pl-5 py-5 rounded-2xl bg-primary-dark m-8">
+                <p className="text-zinc-100 font-bold text-xl">Description:</p>
+                <p className="text-zinc-200 font-medium text-lg py-10">
+                  {cars.CarDescription}
                 </p>
-                <p className="flex px-12">{cars.CarDescription}</p>
               </div>
-              <Space direction="vertical" size={12} className="pt-10 mx-10">
+              <Space direction="vertical" size={12} className=" mx-10">
                 <RangePicker
                   disabledDate={disabledDate}
                   className="w-96 h-10 text-2xl "
@@ -144,11 +158,37 @@ export default function Page() {
                   }}
                 />{" "}
               </Space>
-              <div className="pt-5">
-                <label htmlFor="Status" className="bg-gray-100 mx-10">
-                  {" "}
-                  Status: &nbsp;&nbsp;&nbsp;&nbsp;
-                </label>
+              <div className="w-48">
+                <p
+                  className={`text-xl font-medium text-black mt-5 bg-zinc-200 ml-8 ${
+                    status === "Available" ? "text-green-500" : "text-red-500"
+                  }`}
+                >
+                  {status || "Status: "}{" "}
+                </p>
+              </div>
+              <div>
+                <Button
+                  type="primary"
+                  onClick={onCheckAvailability}
+                  className="bg-sand hover:bg-primary text-white font-bold text-xl py-2 px-4 rounded h-12 w-60 mt-10 ml-8"
+                >
+                  Check Availability
+                </Button>
+              </div>
+              <div>
+                <Button
+                  type="primary"
+                  onClick={onReserve}
+                  className={`bg-sand hover:bg-primary text-white font-bold text-xl py-2 px-4 rounded h-12 w-60 mt-10 ml-8 ${
+                    status !== "Available"
+                      ? "cursor-not-allowed opacity-50"
+                      : ""
+                  }`}
+                  disabled={status !== "Available"}
+                >
+                  Reserve
+                </Button>
               </div>
             </div>
           </div>
@@ -163,12 +203,6 @@ export default function Page() {
         >
           Go Back
         </Link>
-        <button
-          className="bg-green-600 text-sky text-s uppercase font-bold rounded-full p-2 shadow-md"
-          onClick={onReserve}
-        >
-          Order
-        </button>
       </div>
       <div>
         <Footer />

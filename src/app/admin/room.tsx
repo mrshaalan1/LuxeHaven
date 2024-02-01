@@ -10,6 +10,7 @@ import {
   UploadProps,
 } from "antd/es/upload";
 import axios from "axios";
+import EditRoom from "./EditDeleteRoom"
 
 const normFile = (e: any) => {
   if (Array.isArray(e)) {
@@ -38,7 +39,7 @@ const FormDisabledDemo: React.FC = () => {
     RoomType: "",
     RoomDescription: "",
     RoomPrice: "",
-    RoomPicUrl: "",
+    RoomPic: "",
     RoomNumber: "",
   });
   const getBase64 = (img: RcFile, callback: (url: string) => void) => {
@@ -63,7 +64,7 @@ const FormDisabledDemo: React.FC = () => {
       getBase64(info.file.originFileObj as RcFile, (url) => {
         setLoading(false);
         setImageUrl(url);
-        room.RoomPicUrl = url;
+        room.RoomPic = url;
       });
     }
   };
@@ -195,6 +196,7 @@ const FormDisabledDemo: React.FC = () => {
           </Form.Item>
         </Form>
       </div>
+      <EditRoom/>
     </div>
   );
 };

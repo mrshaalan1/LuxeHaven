@@ -1,19 +1,21 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Checkbox } from "antd";
-import Navbar from "../components/NavBar";
+import { useEffect, useState } from "react";
+import { NextPage, NextPageContext } from "next";
+import { message, Button, Checkbox } from "antd";
 import { DatePicker, Space } from "antd";
+import axios from "axios";
+import Swal from "sweetalert2";
+import dayjs, { Dayjs } from "dayjs";
+import Navbar from "@/app/components/NavBar";
 import Footer from "@/app/components/Footer";
 import Image from "next/image";
-import { Carousel, Button, message } from "antd";
-import axios from "axios";
-import dayjs, { Dayjs } from "dayjs";
-import Swal from "sweetalert2";
+import { Carousel } from "antd";
+import { useParams } from "next/navigation";
 
 const { RangePicker } = DatePicker;
 
-function Reserve() {
+export default function Page() {
   interface Room {
     _id: number;
     RoomType: string;
@@ -28,6 +30,7 @@ function Reserve() {
     cachedImagePath?: string;
   }
 
+  const { id } = useParams();
   const [rooms, setRooms] = useState<Room[]>([]);
   const [roomType, setRoomType] = useState("");
   const [checkInDate, setCheckInDate] = useState<Dayjs | null>(null);
@@ -48,12 +51,12 @@ function Reserve() {
       }
       const response = await axios.post("/api/reservation/availability", {
         RoomId: selectedRoom._id,
-        reservationType: "room", // You may need to adjust this based on your backend
+        reservationType: "room",
         checkInDate,
         checkOutDate,
       });
 
-      setStatus(response.data.status); // Update the status based on the availability check result
+      setStatus(response.data.status);
     } catch (error) {
       console.error("Error checking availability:", error);
     }
@@ -81,6 +84,27 @@ function Reserve() {
   };
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        //console.log(id);
+
+        const response = await axios.post(`/api/reservation/getReservation`, {
+          ReservationId: id,
+        });
+
+        const reservationDetails = response.data;
+        //console.log(reservationDetails.reservation);
+
+        // Rest of your data fetching logic...
+      } catch (error) {
+        console.error("Error fetching reservation details:", error);
+      }
+    };
+
+    fetchData();
+  });
+
+  useEffect(() => {
     axios
       .get("http://localhost:3000/api/rooms")
       .then((response) => {
@@ -100,55 +124,57 @@ function Reserve() {
     );
   };
 
-  const onReserve = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      console.error("No token found in local storage!");
-      return;
-    }
-    const selectedRoom = rooms.find((room) => room.RoomType === roomType);
-
-    if (!selectedRoom) {
-      console.error("No room selected!");
-      return;
-    }
-
-    axios
-      .post("http://localhost:3000/api/reservation/new", {
+  const onUpdate = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("No token found in local storage!");
+        return;
+      }
+  
+      const selectedRoom = rooms.find((room) => room.RoomType === roomType);
+  
+      if (!selectedRoom) {
+        console.error("No room selected!");
+        return;
+      }
+  
+      const response = await axios.post("/api/reservation/edit", {
         RoomId: selectedRoom._id,
         roomType: roomType,
         checkInDate: checkInDate,
         checkOutDate: checkOutDate,
         spa: spa,
         gym: gym,
-      })
-
-      .then((response) => {
-        console.log("Reservation success", response.data);
-        Swal.fire({
-          icon: "success",
-          title: "Reservation Sucessfull",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      })
-      .catch((error) => {
-        if (error.response && error.response.status === 400) {
-          Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "User already reserved a room!",
-          });
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "There was an error reserving a room!",
-          });
-          console.error("There was an error!", error);
-        }
+        ReservationId: id, // Pass the reservationId to identify the reservation to be updated
       });
+  
+      //console.log("Reservation updated", response.data);
+  
+      Swal.fire({
+        icon: "success",
+        title: "Reservation Updated Successfully",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } catch (error:any) {
+      if (error.response && error.response.status === 400) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "User already reserved a room!",
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "There was an error updating the reservation!",
+        });
+        console.error("There was an error!", error);
+      }
+    }
   };
+  
 
   const onSpaChange = (e: any) => {
     setSpa(e.target.checked);
@@ -163,7 +189,7 @@ function Reserve() {
       <Navbar />
       <p className="text-5xl mt-10 text-center font-extrabold mb-4 text-primary-dark">
         {" "}
-        RESERVATION
+        EDIT RESERVATION
       </p>
 
       <ul className="grid md:grid-cols-3 xs:grid-cols-1 md:gap-4 xs:gap-5">
@@ -248,7 +274,7 @@ function Reserve() {
               <div className="flex justify-center items-center">
                 <Button
                   type="primary"
-                  onClick={onReserve}
+                  onClick={onUpdate}
                   className={`bg-sand hover:bg-primary text-white font-bold text-xl py-2 px-4 rounded h-12 w-72 mt-10 lg:mb-96 mr-8 ${
                     status !== "Available"
                       ? "cursor-not-allowed opacity-50"
@@ -256,7 +282,7 @@ function Reserve() {
                   }`}
                   disabled={status !== "Available"} // Disable the Reserve button if the status is not available
                 >
-                  Reserve
+                  Update Reservation
                 </Button>
               </div>
             </>
@@ -300,5 +326,3 @@ function Reserve() {
     </div>
   );
 }
-
-export default Reserve;

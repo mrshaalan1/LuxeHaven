@@ -40,7 +40,8 @@ export async function GET(request: NextRequest) {
         cachedImagePath: `/imageCache/${filename}`,
       });
     }
-
+    console.log(room);
+    
     return NextResponse.json({ room: cachedImages });
   } catch (error: any) {
     console.error(error);

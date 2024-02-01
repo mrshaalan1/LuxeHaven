@@ -22,7 +22,6 @@ export const POST = async (request: any) => {
         if (!user) {
             return NextResponse.json("User Not Found", { status: 404 });
         }
-        
         if (OldPassword === "")
         return NextResponse.json("Old Password Missing!", { status: 500 });
     

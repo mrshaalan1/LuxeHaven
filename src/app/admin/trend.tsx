@@ -29,7 +29,7 @@ interface CustomizedAxisTickProps {
 }
 class CustomizedAxisTick extends PureComponent<CustomizedAxisTickProps> {
   render() {
-    const { x, y, stroke, payload } = this.props;
+    const { x, y, payload } = this.props;
 
     return (
       <g transform={`translate(${x},${y})`}>
@@ -273,6 +273,10 @@ export default function Example() {
           </ResponsiveContainer>
         </div>
       </div>
+      <div className="bg-primary-dark flex justify-center pt-4 items-center text-4xl font-bold">
+        <span>Recent Reservations</span>
+      </div>
+
       <div className="bg-primary-dark flex justify-center items-center pt-5">
         <div
           className="text-2xl"

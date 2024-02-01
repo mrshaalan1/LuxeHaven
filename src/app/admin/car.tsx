@@ -10,6 +10,7 @@ import {
   UploadProps,
 } from "antd/es/upload";
 import axios from "axios";
+import EditCar from "./EditDeleteCar"
 
 const normFile = (e: any) => {
   if (Array.isArray(e)) {
@@ -195,6 +196,7 @@ const FormDisabledDemo: React.FC = () => {
           </Form.Item>
         </Form>
       </div>
+      <EditCar/>
     </div>
   );
 };

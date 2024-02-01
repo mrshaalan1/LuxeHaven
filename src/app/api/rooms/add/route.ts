@@ -11,16 +11,18 @@ export async function POST(request: NextRequest) {
       RoomType,
       RoomPrice,
       RoomDescription,
-      RoomPicUrl,
+      RoomPic,
       RoomNumber,
     } = reqBody;
     const newRoom = new Room({
       RoomType,
       RoomPrice,
       RoomDescription,
-      RoomPicUrl,
+      RoomPic,
       RoomNumber,
     });
+    console.log(reqBody);
+    
 
     await newRoom.save();
     return NextResponse.json({

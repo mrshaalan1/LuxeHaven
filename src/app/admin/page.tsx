@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/NavBar";
 import Footer from "../components/Footer";
-import MenuSetting from "./menu";
+import MenuSetting from "./addMenu";
 import Car from "./car";
 import AddAdmin from "./addAdmin";
 import Room from "./room";
@@ -13,7 +13,8 @@ import { useMediaQuery } from "react-responsive";
 import { Dropdown, Menu } from "antd";
 
 export default function admin() {
-  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
   let decodedToken;
 
   const isSmallScreen = useMediaQuery({ query: "(max-width: 768px)" });
